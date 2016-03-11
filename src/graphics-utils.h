@@ -26,14 +26,19 @@
 #define COLOR_175   ofColor::fromHex(0x9baaa0)
 #define COLOR_LINE COLOR_55
 
-#define MAIN_FONT_LINUX ""
+#define MAIN_FONT_LINUX "sans-serif"
 #define MAIN_FONT_MAC ""
 #define MAIN_FONT MAIN_FONT_LINUX
 
-#define TERMINAL_FONT_LINUX ""
+#define TERMINAL_FONT_LINUX "sans-serif"
 #define TERMINAL_FONT TERMINAL_FONT_LINUX
 
-#define NOISE_BG "images/noise-bg-color-darker.png"
+#define WINDOW_WIDTH 1920
+#define WINDOW_HEIGHT 1200
+#define WINDOW_TITLE "Dex-ui"
+#define FRAME_RATE 100
+
+#define NOISE_BG "/home/paul/git/dex-ui/images/noise-bg-color-darker.png"
 
 void tick_line(float x1, float x2, float y);
 void tick(float x, float y);
