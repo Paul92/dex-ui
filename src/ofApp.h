@@ -25,15 +25,15 @@ public:
   void windowResized(int w, int h);
   void dragEvent(ofDragInfo dragInfo);
   void gotMessage(ofMessage msg);
-		
-  bool isRecording;
-  bool isDrawing;
-  int recordFrameCounter;
-  int recordMaxFrames;
-  
-  Layout layout;
-  Left left;
-  Right right;
-  Term term;
-  Keyboard keyboard;
+
+//  bool isRecording;
+//  bool isDrawing;
+//  int recordFrameCounter;
+//  int recordMaxFrames;
+//  
+//  Layout layout;
+//  Left left;
+//  Right right;
+//  Term term;
+//  Keyboard keyboard;
 };
