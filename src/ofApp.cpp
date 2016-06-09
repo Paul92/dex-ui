@@ -9,10 +9,10 @@ void ofApp::setup() {
 
     background = Background();
 
-    //  // Position components, set delays for animation
-    //  left = Left();
-    //  left.setPos(165,165);
-    //  left.setDelay(-50);
+    // Position components, set delays for animation
+    left = Left();
+    left.setPos(165,165);
+    left.setDelay(-50);
     //
     //  right = Right();
     //  right.setPos(101*GRID_SIZE,165);
@@ -60,7 +60,7 @@ void ofApp::draw() {
         //
         //    // Draw and update components
         //    if (isDrawing) {
-        //      left.draw();
+        left.draw();
         //      right.draw();
         //      term.draw();
         //      keyboard.draw();

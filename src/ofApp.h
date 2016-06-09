@@ -32,7 +32,7 @@ class ofApp : public ofBaseApp{
         int recordMaxFrames;
 
         Background background;
-        //  Left left;
+        Left left;
         //  Right right;
         //  Term term;
         //  Keyboard keyboard;
