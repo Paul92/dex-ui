@@ -4,13 +4,6 @@
 #include "graphics-utils.h"
 #include "text.h"
 
-struct animation_event_t {
-    int delay;
-    int duration; // -1 if inf
-    int id;
-    int nextID; // loop by setting to self
-};
-
 class Animated {
     public:
         Animated();
