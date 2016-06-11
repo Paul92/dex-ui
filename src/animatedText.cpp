@@ -1,56 +1,54 @@
 #include "animatedText.h"
+#include "unknownEvent.h"
 
-AnimatedText::AnimatedText() {
-    x = 0;
-    y = 0;
-    duration = 50;
-    delay = 0;
-    rate = 5;
-    color = COLOR_LINE;
-    fromRight = false;
+AnimatedText::AnimatedText(std::string string, int fontSize,
+                           ofPoint position, bool fromRight) :
+                 text(string, MAIN_FONT, fontSize),
+                 Widget(text.getWidth(), text.getHeight(), position) {
 
-    newEvent(0, 300, 0, 1); // intro
-    newEvent(0, -1, 1, 1); // main
+    this->color = COLOR_LINE;
+    this->fromRight = fromRight;
+
+    this->flickerRate = 5;
+    this->flickerDuration = 50;
+
+    setPosition(position);
+
+    addEvent(AnimationEvent("delay", 0));
+    addEvent(AnimationEvent("intro", 300));
+    addEvent(AnimationEvent("main"));
+}
+
+void AnimatedText::setColor(ofColor color) {
+    this->color = color;
+}
+
+void AnimatedText::setFlickerParameters(float rate, float duration) {
+    this->flickerRate = rate;
+    this->flickerDuration = duration;
 }
 
 void AnimatedText::draw() {
     updateTime();
 
-    if (getTime() < 0)
-        return;
+    if (currentEvent() == "delay") {
 
-    if (currentEvent.id == 0) {
-        // Intro
-        float alpha = 255*flicker(getTime(), duration, rate);
+    } else if (currentEvent() == "intro") {
+        float alpha = 255 * flicker(getTime(), flickerDuration, flickerRate);
         ofSetColor(color, alpha);
         drawString();
-    } else{
-        // Main
+    } else if (currentEvent() == "main") {
         ofSetColor(color, 255);
         drawString();
+    } else {
+        throw new UnknownEvent();
     }
-}
-
-void AnimatedText::setText(string fontPath, int size) {
-    text.setFont(fontPath, size);
 }
 
 void AnimatedText::drawString() {
     if (fromRight)
-        text.drawStringFromTopRight(s, x, y);
+        text.drawStringFromTopRight(getPosition());
     else
-        text.drawString(s, x, y);
+        text.drawString(getPosition());
 }
 
-AnimatedText newText(string s, int fontSize, float x, float y, float dur, float delay, ofColor color, bool fromRight) {
-    AnimatedText newText = AnimatedText();
-    newText.setText(MAIN_FONT, fontSize);
-    newText.s = s;
-    newText.fromRight = fromRight;
-    newText.color = color;
-    newText.duration = dur;
-    newText.setDelay(delay);
-    newText.x = x;
-    newText.y = y;
-    return newText;
-}
