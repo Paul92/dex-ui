@@ -3,29 +3,42 @@
 #include <vector>
 #include "graphics-utils.h"
 #include "text.h"
+#include "animationEvent.h"
 
+/**
+ * @class Animated
+ *
+ * @brief Base class for animated widgets.
+ *
+ * Provides routines for managing the events of an application.
+ * Delays are introduced by having empty events.
+ * It works by having an individual timer that counts the frames.
+ */
 class Animated {
     public:
         Animated();
-        void update();
+
+        /// Update the timer and the current event, if necessary.
         void updateTime();
-        float getTime();
 
-        void newEvent(int delay, int duration, int id, int nextID);
+        /// Get the progress of the current event.
+        int getTime();
 
-        void setEvents(vector<animation_event_t> events_);
+        void addEvent(AnimationEvent event);
+        void addEvent(AnimationEvent event, int index);
+
+        void setEvents(vector<AnimationEvent> event);
+
+        void update();
+
+    protected:
+        /// Updates the events of the components.
         virtual void updateDependencyEvents();
 
-        void setDelay(int delay_);
-        int getDelay();
-        virtual void updateDependencyDelays(int delay_);
+        std::string currentEvent();
 
+    private:
         int currentEventIndex;
-        animation_event_t currentEvent;
-
-        vector<animation_event_t> events;
-    protected:
-        float time;
-        float delay;
-        void updateCurrentEvent();
+        float currentTime;
+        std::vector<AnimationEvent> events;
 };
