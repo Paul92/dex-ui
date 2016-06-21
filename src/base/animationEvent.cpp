@@ -1,6 +1,6 @@
 #include "animationEvent.h"
-#include "outOfRange.h"
-#include "infiniteEvent.h"
+#include "exceptions/outOfRange.h"
+#include "exceptions/infiniteEvent.h"
 
 void AnimationEvent::setInfinite() {
     duration = -1;
@@ -13,27 +13,28 @@ void AnimationEvent::setDuration(int duration) {
     this->duration = duration;
 }
 
-AnimationEvent::AnimationEvent(std::string label, int duration) {
+AnimationEvent::AnimationEvent(std::string label) {
     this->label = label;
-
-    if (duration == -1)
-        setInfinite();
-    else
-        setDuration(duration);
+    setInfinite();
 }
 
-int AnimationEvent::getDuration() {
+AnimationEvent::AnimationEvent(std::string label, int duration) {
+    this->label = label;
+    setDuration(duration);
+}
+
+int AnimationEvent::getDuration() const {
     if (isInfinite())
         throw new InfiniteEvent();
     else
         return duration;
 }
 
-bool AnimationEvent::isInfinite() {
+bool AnimationEvent::isInfinite() const {
     return duration < 0;
 }
 
-std::string AnimationEvent::getLabel() {
+std::string AnimationEvent::getLabel() const {
     return label;
 }
 

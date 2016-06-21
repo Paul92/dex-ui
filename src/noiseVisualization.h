@@ -13,6 +13,10 @@
 #include "waves.h"
 #include "animated.h"
 
+
+#include "animatedText.h"
+#include "animatedTickLine.h"
+
 class NoiseVisualization : public Animated {
   
 public:
@@ -41,9 +45,9 @@ public:
   void updateDependencyEvents();
   void updateDependencyDelays(int delay_);
 private:
-  AnimatedTickLine tline1;
-  AnimatedTickLine tline2;
-  vector<AnimatedText> texts;
-  
+//  AnimatedTickLine tline1;
+//  AnimatedTickLine tline2;
+//  vector<AnimatedText> texts;
+//  
   void initTexture(int descalar);
 };

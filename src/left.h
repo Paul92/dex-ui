@@ -15,24 +15,16 @@
 #include "noiseVisualization.h"
 #include "animated.h"
 
-class Left : public Animated {
+class Left : public Widget, public Animated {
 
     public:
-        Left();
+        Left(ofPoint position, int width);
         void draw();
-        void setPos(float x_, float y_);
 
-        float x;
-        float y;
-        float w;
-        float h;
-
-        void updateDependencyEvents();
-        void updateDependencyDelays(int delay_);
     private:
-//        Header header;
-//        TimeDisplay timeDisplay;
-//        BoxVisualization boxVis;
+        Header header;
+        TimeDisplay timeDisplay;
+        BoxVisualization boxVis;
 //        Graph g1;
 //        Graph g2;
 //        Graph g3;

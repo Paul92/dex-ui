@@ -14,7 +14,7 @@
 #include "animated.h"
 
 
-class Right : public Animated {
+class Right/* : public Animated */ {
 public:
   Right();
   void draw();
@@ -29,12 +29,12 @@ public:
   void updateDependencyEvents();
   void updateDependencyDelays(int delay_);
 private:
-  vector<AnimatedText> texts;
-  Header header;
-  RadarContainer radar;
-  SpikeGraph sg;
-  Header footer;
-  
-  AnimatedTickLine tline1;
-  AnimatedTickLine tline2;
+//  vector<AnimatedText> texts;
+//  Header header;
+//  RadarContainer radar;
+//  SpikeGraph sg;
+//  Header footer;
+//  
+//  AnimatedTickLine tline1;
+//  AnimatedTickLine tline2;
 };

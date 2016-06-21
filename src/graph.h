@@ -14,6 +14,9 @@
 #include "animated.h"
 #include <vector>
 
+#include "animatedText.h"
+#include "animatedTickLine.h"
+
 class Graph : public Animated {
   
 public:

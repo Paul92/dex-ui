@@ -39,9 +39,9 @@ private:
   
   ofShader maskShader;
   
-  AnimatedTickLine tline1;
-  AnimatedTickLine tline2;
-  vector<AnimatedText> texts;
-  
+//  AnimatedTickLine tline1;
+//  AnimatedTickLine tline2;
+//  vector<AnimatedText> texts;
+//  
   void boxIntro();
 };

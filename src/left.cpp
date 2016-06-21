@@ -1,23 +1,19 @@
 #include "left.h"
+#include "textRectangle.h"
 #include "graphics-utils.h"
 #include "easing-utils.h"
 
-Left::Left() {
-    // Default position vars
-//    x = 0;
-//    y = 0;
-//    w = 240;
-//    delay = 0;
-//
-//    header.setPos(0,0);
-//    header.setSize(w);
-//    header.ul_text = "SYSTEM";
-//    header.ur_text = "ALT PANEL";
-//    header.line.duration = 50;
-//
-//    timeDisplay.setPos(0,2*GRID_SIZE);
-//
-//    boxVis.setPos(0, 9*GRID_SIZE);
+Left::Left(ofPoint position, int width) :
+    header(width, TextRectangle("SYSTEM", "ALT PANEL", "", "")),
+    timeDisplay(width),
+    boxVis(width)
+{
+    Widget::setPosition(position);
+
+    header.setPosition(ofPoint(0, 0));
+    timeDisplay.setPosition(ofPoint(0, 2 * GRID_SIZE));
+
+    boxVis.setPosition(ofPoint(0, 9*GRID_SIZE));
 //
 //    int graph_start=21;
 //    g1.setPos(0, (graph_start)*GRID_SIZE);
@@ -43,17 +39,19 @@ Left::Left() {
 //    newEvent(0, 300, 0, 1); // intro
 //    newEvent(0, -1, 1, 1); // main
 //    currentEvent = events[0];
-//
-//    updateDependencyEvents();
-//    updateDependencyDelays(getDelay());
+
+    addEvent(AnimationEvent("delay", 0));
+    addEvent(AnimationEvent("intro", 300));
+    addEvent(AnimationEvent("main"));
+
 }
 
 void Left::draw() {
-//    updateTime();
-//    ofPushMatrix();
-//    {
-//        ofTranslate(x, y);
-//
+    updateTime();
+    ofPushMatrix();
+    {
+        ofTranslate(getPosition().x, getPosition().y);
+
 //        if (currentEvent.id == 0) {
 //            // Intro
 //            // Set header / footer colors
@@ -71,44 +69,16 @@ void Left::draw() {
 //            footer.setAlpha(255,footerAlpha);
 //        }
 //
-//        header.draw();
-//        timeDisplay.draw();
-//        boxVis.draw();
+        header.draw();
+        timeDisplay.draw();
+        boxVis.draw();
 //        g1.draw();
 //        g2.draw();
 //        g3.draw();
 //        g4.draw();
 //        noiseVis.draw();
 //        footer.draw();
-//    }
-//    ofPopMatrix();
+    }
+    ofPopMatrix();
 }
 
-void Left::setPos(float x_, float y_) {
-//    x = x_;
-//    y = y_;
-}
-
-void Left::updateDependencyDelays(int delay_) {
-//    header.line.setDelay(delay_+0);
-//    timeDisplay.setDelay(delay_+-20);
-//    boxVis.setDelay(delay_+-25);
-//    g1.setDelay(delay_+ofRandom(25)-60);
-//    g2.setDelay(delay_+ofRandom(25)-60);
-//    g3.setDelay(delay_+ofRandom(25)-60);
-//    g4.setDelay(delay_+ofRandom(25)-60);
-//    noiseVis.setDelay(delay_+-40);
-//    footer.line.setDelay(delay_+-90);
-}
-
-void Left::updateDependencyEvents() {
-//    header.line.setEvents(events);
-//    timeDisplay.setEvents(events);
-//    boxVis.setEvents(events);
-//    g1.setEvents(events);
-//    g2.setEvents(events);
-//    g3.setEvents(events);
-//    g4.setEvents(events);
-//    noiseVis.setEvents(events);
-//    footer.line.setEvents(events);
-}

@@ -33,6 +33,6 @@ public:
   void updateDependencyEvents();
   void updateDependencyDelays(int delay_);
 private:
-  Header header;
+//  Header header;
   ofImage noiseBG;
 };

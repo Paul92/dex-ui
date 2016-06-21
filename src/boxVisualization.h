@@ -12,27 +12,23 @@
 #include "text.h"
 #include "waves.h"
 #include "animated.h"
+#include "animatedTickLine.h"
+#include "animatedText.h"
+#include "textRectangle.h"
+
 #include <vector>
 
-class BoxVisualization : public Animated {
-  
-public:
-  BoxVisualization();
-  void draw();
-  
-  void setPos(float x_, float y_);
-  
-  float x;
-  float y;
-  float w;
-  float h;
-  
-  Waves waves;
-  
-  void updateDependencyEvents();
-  void updateDependencyDelays(int delay_);
-private:
-  AnimatedTickLine tline1;
-  AnimatedTickLine tline2;
-  vector<AnimatedText> texts;
+class BoxVisualization : public Animated, public Widget {
+
+    public:
+        BoxVisualization(int width);
+        void draw();
+
+        Waves waves;
+
+    private:
+         TextRectangle textRectangle;
+         AnimatedTickLine tline1;
+         AnimatedTickLine tline2;
 };
+

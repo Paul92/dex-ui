@@ -12,6 +12,7 @@
 
 class ofApp : public ofBaseApp{
     public:
+        ofApp();
         void setup();
         void update();
         void draw();
@@ -33,6 +34,8 @@ class ofApp : public ofBaseApp{
 
         Background background;
         Left left;
+
+        Left largeLeft, smallLeft;
         //  Right right;
         //  Term term;
         //  Keyboard keyboard;

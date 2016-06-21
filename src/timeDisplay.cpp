@@ -1,190 +1,174 @@
 #include "timeDisplay.h"
 #include "graphics-utils.h"
 
-TimeDisplay::TimeDisplay() {
-  // Reset if being called again
-  upperTexts.clear();
-  lowerTexts.clear();
-  
-  setPos(0,0);
-  w = 240;
-  h = 90;
-  
-  ::time(&currentTime);
-  ::time(&initTime);
-  localizedTime = localtime (&currentTime);
-  
-  year_s = ofToString(localizedTime->tm_year+1900);
-  mon_s = (char *) malloc(10*sizeof(char));
-  strftime(mon_s, 10, "%b %d", localizedTime);
-  for (int i = 0; i < 10; i++)
-    mon_s[i] = toupper(mon_s[i]);
-  
-  // Lines
-  tline1.w = w;
-  tline1.duration = 40;
-  
-  tline2.w = w;
-  tline2.y = 60;
-  tline2.duration = 40;
-  tline2.extraTicks.push_back(3*GRID_SIZE+0.5);
-  tline2.extraTicks.push_back(4*GRID_SIZE+0.5);
-  tline2.extraTicks.push_back(8*GRID_SIZE+0.5);
-  tline2.extraTicks.push_back(9*GRID_SIZE+0.5);
-  tline2.extraTicks.push_back(13*GRID_SIZE+0.5);
-  tline2.extraTicks.push_back(14*GRID_SIZE+0.5);
-  
-  tline3.w = w;
-  tline3.y = 90;
-  tline3.duration = 40;
-  tline3.extraTicks.push_back(3*GRID_SIZE+0.5);
-  tline3.extraTicks.push_back(4*GRID_SIZE+0.5);
-  tline3.extraTicks.push_back(8*GRID_SIZE+0.5);
-  tline3.extraTicks.push_back(9*GRID_SIZE+0.5);
-  tline3.extraTicks.push_back(13*GRID_SIZE+0.5);
-  tline3.extraTicks.push_back(14*GRID_SIZE+0.5);
-  
-  // Text
-  int textDelay = 0;
-  mainTime = newText("SYSTEM SUMMARY", 37,
-                     5, 12,
-                     20, delay+textDelay-80,
-                     COLOR_175,
-                     false);
-  mainTime.text.ofFont.setSpaceSize(0.4);
-  mainTime.setEvents(events);
-  
-  // Upper and lower texts
-  upperTextDelay=-80;
-  lowerTextDelay=-65;
-  int upper_text_y = 60+7;
-  int lower_text_y = 75+2;
-  int inset = 5;
-  
-  string upperStrings[4] = {year_s, "UPTIME", "SYSTEM", "V"};
-  string lowerStrings[4] = {mon_s, uptime_s, "ONLINE", "0.1b"};
-  int xpositions[4] = {0.0+inset, 4*GRID_SIZE+inset, 9*GRID_SIZE+inset, 14*GRID_SIZE+inset};
-  
-  // Upper
-  for (int i = 0; i < 4; i++) {
-    AnimatedText newT = newText(upperStrings[i], 7,
-                                xpositions[i], upper_text_y,
-                                20, upperTextDelay,
-                                COLOR_75,
-                                false);
-    upperTexts.push_back(newT);
-  }
-  
-  // Lower
-  for (int i = 0; i < 4; i++) {
-    AnimatedText newT = newText(lowerStrings[i], 7,
-                                xpositions[i], lower_text_y,
-                                20, lowerTextDelay,
-                                COLOR_135,
-                                false);
-    lowerTexts.push_back(newT);
-  }
-  
-  // Animation settings
-  events.clear();
-  newEvent(0, 300, 0, 1); // intro
-  newEvent(0, -1, 1, 1); // main
-  currentEvent = events[0];
-  
-  updateDependencyEvents();
-  updateDependencyDelays(getDelay());
+void TimeDisplay::initializeLines() {
+    upperLine.setPosition(ofPoint(0, 0));
+    midLine.setPosition(ofPoint(0, getHeight() - 30));
+    lowerLine.setPosition(ofPoint(0, getHeight()));
+
+    int unitSize = getWidth() / 16; // GRID_SIZE for width 240
+    int tickMultipliers[] = {3, 4, 8, 9, 13, 14};
+
+    for (size_t index = 0; index < sizeof(tickMultipliers) / sizeof(int); index++) {
+        midLine.addTick(tickMultipliers[index] * unitSize + 0.5);
+        lowerLine.addTick(tickMultipliers[index] * unitSize + 0.5);
+    }
+}
+
+void TimeDisplay::initializeMainTime() {
+    mainTime.setFlickerParameters(5, 20);
+    mainTime.addDelay(80);
+    mainTime.setColor(COLOR_175);
+
+    float spaceSize = ofMap(getWidth(), 225, 300, 0, 1.25, true);
+    mainTime.setSpaceSize(spaceSize);
+
+    int xPosition = (getWidth() - 2 * GRID_SIZE - mainTime.getWidth()) / 2;
+    mainTime.setPosition(ofPoint(xPosition + GRID_SIZE, (getHeight() - 30 - mainTime.getHeight()) / 2 ));
+}
+
+void TimeDisplay::initializeUpperTexts(int xPositions[4], std::string year) {
+    std::string upperStrings[4] = {year, "UPTIME", "SYSTEM", "V"};
+
+    int yPosition = midLine.getPosition().y + 7;
+
+    for (int index = 0; index < 4; index++) {
+        AnimatedText upperText(upperStrings[index], 7);
+        upperText.setFlickerParameters(5, 20);
+        upperText.setPosition(ofPoint(xPositions[index], yPosition));
+        upperText.setColor(COLOR_75);
+        upperText.addDelay(65);
+        upperTexts.push_back(upperText);
+    }
+}
+
+void TimeDisplay::initializeLowerTexts(int xPositions[4], std::string month) {
+    std::string lowerStrings[4] = {month, "", "ONLINE", "0.1b"};
+
+    int yPosition = upperTexts[0].getPosition().y + 9 + 2; 
+
+    for (int index = 0; index < 4; index++) {
+        AnimatedText lowerText(lowerStrings[index], 7);
+        lowerText.setFlickerParameters(5, 20);
+        lowerText.setPosition(ofPoint(xPositions[index], yPosition));
+        lowerText.setColor(COLOR_135);
+        lowerText.addDelay(80);
+        lowerTexts.push_back(lowerText);
+    }
+
+    // Remove spaces from uptime
+    lowerTexts[1].setSpaceSize(0);
+}
+
+void TimeDisplay::initializeTextArrays(int xPositions[4]) {
+
+    std::string year = ofToString(localizedTime->tm_year + 1900);
+    initializeUpperTexts(xPositions, year);
+
+
+    char monthBuffer[10];
+    strftime(monthBuffer, 10, "%b %d", localizedTime);
+    std::string month = std::string(monthBuffer);
+    std::transform(month.begin(), month.end(), month.begin(), ::toupper);
+    initializeLowerTexts(xPositions, month);
+}
+
+TimeDisplay::TimeDisplay(int width) :
+        upperLine(width, 40, 0, COLOR_LINE),
+        midLine(width, 40, 0, COLOR_LINE),
+        lowerLine(width, 40, 0, COLOR_LINE),
+        mainTime("00 : 00 : 00", 35)
+{
+    setSize(width, 90);
+
+    time(&currentTime);
+    time(&initialTime);
+    localizedTime = localtime(&currentTime);
+
+
+    initializeLines();
+    initializeMainTime();
+
+    int unitSize = width / 16; // GRID_SIZE for width 240
+    int xPositions[] = { 0 * unitSize + 5,
+                         4 * unitSize + 5,
+                         9 * unitSize + 5,
+                        14 * unitSize + 5};
+    initializeTextArrays(xPositions);
+
+
+    addEvent(AnimationEvent("intro", 300));
+    addEvent(AnimationEvent("main"));
+}
+
+std::string timeToString(int hours, int minutes, int seconds) {
+    std::string hoursString = ofToString(hours);
+    std::string minutesString = ofToString(minutes);
+    std::string secondsString = ofToString(seconds);
+
+    if (hours < 10)
+        hoursString = "0" + hoursString;
+    if (minutes < 10)
+        minutesString = "0" + minutesString;
+    if (seconds < 10)
+        secondsString = "0" + secondsString;
+
+    return hoursString + " : " + minutesString + " : " + secondsString;
+}
+
+void TimeDisplay::updateMainTime() {
+    std::string currentTime = timeToString(localizedTime->tm_hour,
+                                           localizedTime->tm_min,
+                                           localizedTime->tm_sec);
+    mainTime.setText(currentTime);
+}
+
+void TimeDisplay::updateUptime() {
+    std::string uptime = timeToString((int)(secondsPassed / 3600) % 99,
+                                      (int)(secondsPassed / 60) % 60,
+                                      (int)(secondsPassed) % 60);
+    lowerTexts[1].setText(uptime);
 }
 
 void TimeDisplay::update() {
-  if ((int)time%60 == 0) {
-    updateClockTime();
-  }
-  updateTime();
+    if (getTime() % 60 == 0) {
+        updateClockTime();
+        updateMainTime();
+        updateUptime();
+    }
+    updateTime();
 }
 
 void TimeDisplay::updateClockTime() {
-  // Only get real time every 10 seconds or if minute is going to change
-  if (t%600 != 0 && localizedTime->tm_sec < 59) {
-    localizedTime->tm_sec += 1;
-    diff_sec += 1;
-  } else {
-    ::time(&currentTime);
-    localizedTime = localtime (&currentTime);
-    diff_sec = difftime(currentTime, initTime);
-  }
-  
-  // Update time strings
-  hour_s = ofToString(localizedTime->tm_hour);
-  min_s = ofToString(localizedTime->tm_min);
-  sec_s = ofToString(localizedTime->tm_sec);
-  
-  // Pad 0's if necessary
-  if (localizedTime->tm_hour < 10)
-    hour_s = "0" + hour_s;
-  if (localizedTime->tm_min < 10)
-    min_s = "0" + min_s;
-  if (localizedTime->tm_sec < 10)
-    sec_s = "0" + sec_s;
-  
-  uptime_s = ofToString((int)(diff_sec/3600)%99);
-  uptime_s += ":" + ofToString((int)(diff_sec/60)%60);
-  uptime_s += ":" + ofToString((int)diff_sec%60);
+    // Only get real time every 10 seconds or if minute is going to change
+    if (getTime() % 600 != 0 && localizedTime->tm_sec < 59) {
+        localizedTime->tm_sec += 1;
+        secondsPassed += 1;
+    } else {
+        ::time(&currentTime);
+        localizedTime = localtime(&currentTime);
+        secondsPassed = difftime(currentTime, initialTime);
+    }
 }
 
 void TimeDisplay::draw() {
-  update();
-  ofPushMatrix();
-  {
-    ofTranslate(x, y);
-    
-    // INTRO or MAIN
-    ofSetColor(COLOR_LINE);
-    
-    // Top of time
-    tline1.draw();
-    // Top of info
-    tline2.draw();
-    // Bottom of info
-    tline3.draw();
-    
-    mainTime.s = hour_s + " : " + min_s + " : " + sec_s;
-    mainTime.draw();
-    
-    // Update uptime
-    lowerTexts[1].s = uptime_s;
-    
-    // Draw texts
-    for (int i = 0; i < upperTexts.size(); i++) {
-      upperTexts[i].draw();
-      lowerTexts[i].draw();
+    update();
+    ofPushMatrix();
+    {
+        ofTranslate(getPosition());
+        ofSetColor(COLOR_LINE);
+
+        upperLine.draw();
+        midLine.draw();
+        lowerLine.draw();
+
+        mainTime.draw();
+
+        for (size_t index = 0; index < upperTexts.size(); index++) {
+            upperTexts[index].draw();
+            lowerTexts[index].draw();
+        }
     }
-  }
-  ofPopMatrix();
+    ofPopMatrix();
 }
 
-void TimeDisplay::setPos(float x_, float y_) {
-  x = x_;
-  y = y_;
-}
-
-void TimeDisplay::updateDependencyDelays(int delay_) {
-  tline1.setDelay(delay_);
-  tline2.setDelay(delay_-5);
-  tline3.setDelay(delay_-10);
-  mainTime.setDelay(delay_-80);
-  for (int i = 0; i < upperTexts.size(); i++) {
-    upperTexts[i].setDelay(delay_+upperTextDelay);
-    lowerTexts[i].setDelay(delay_+lowerTextDelay);
-  }
-}
-
-void TimeDisplay::updateDependencyEvents() {
-  tline1.setEvents(events);
-  tline2.setEvents(events);
-  tline3.setEvents(events);
-  mainTime.setEvents(events);
-  for (int i = 0; i < upperTexts.size(); i++) {
-    upperTexts[i].setEvents(events);
-    lowerTexts[i].setEvents(events);
-  }
-}

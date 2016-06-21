@@ -12,20 +12,24 @@
  * infinite (in a boolean).
  *
  * If an event has an infinite duration, it stops the progression to other
- * events (so it should be the last one).
+ * events (it should be the last one).
  */
 class AnimationEvent {
     private:
+        /// The duration of an event, in frames. Negative indicates infinite.
         int duration;
+
+        /// Label used to identify the animation event.
         std::string label;
 
         void setDuration(int duration);
         void setInfinite();
 
     public:
-        AnimationEvent(std::string label, int duration = -1);
+        AnimationEvent(std::string label);
+        AnimationEvent(std::string label, int duration);
 
-        int getDuration();
-        bool isInfinite();
-        std::string getLabel();
+        int getDuration() const;
+        bool isInfinite() const;
+        std::string getLabel() const;
 };

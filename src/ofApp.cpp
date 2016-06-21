@@ -1,6 +1,8 @@
 #include "ofApp.h"
 #include "graphics-utils.h"
 
+ofApp::ofApp() : left(ofPoint(165, 165), 240), largeLeft(ofPoint(465, 165), 500), smallLeft(ofPoint(1000, 165), 100) {}
+
 void ofApp::setup() {
     ofSetWindowTitle("DEX UI");
     ofBackground(COLOR_15);
@@ -10,9 +12,7 @@ void ofApp::setup() {
     background = Background();
 
     // Position components, set delays for animation
-    left = Left();
-    left.setPos(165,165);
-    left.setDelay(-50);
+//    left.setDelay(-50);
     //
     //  right = Right();
     //  right.setPos(101*GRID_SIZE,165);
@@ -61,6 +61,9 @@ void ofApp::draw() {
         //    // Draw and update components
         //    if (isDrawing) {
         left.draw();
+
+        smallLeft.draw();
+        largeLeft.draw();
         //      right.draw();
         //      term.draw();
         //      keyboard.draw();

@@ -35,9 +35,9 @@ private:
   Radar radar2;
   Radar radar3;
   
-  AnimatedTickLine tline1;
-  AnimatedTickLine tline2;
-  vector<AnimatedText> texts;
+//  AnimatedTickLine tline1;
+//  AnimatedTickLine tline2;
+//  vector<AnimatedText> texts;
 
   void boxIntro();
 };
