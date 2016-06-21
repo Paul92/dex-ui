@@ -1,4 +1,5 @@
 #include "text.h"
+#include "utils/data-utils.h"
 
 void Text::setFont(int size, std::string font) {
     ofFont.load(font, size);
@@ -12,7 +13,14 @@ void Text::setText(std::string text) {
 Text::Text(std::string text, AnchorPosition anchor,
            int size, std::string font) {
     this->anchor = anchor;
+
     setFont(size, font);
+
+    if (anchor == TOP_RIGHT || anchor == BOTTOM_RIGHT) {
+        ofFont.setDirection(ofTtfSettings::RightToLeft);
+        text = reverseLines(text);
+    }
+
     setText(text);
 }
 
@@ -22,19 +30,13 @@ void Text::draw() const {
 
     switch (anchor) {
         case TOP_LEFT:
+        case TOP_RIGHT:
             drawPosition = ofPoint(getPosition().x,
                                    getPosition().y + getHeight());
             break;
-        case TOP_RIGHT:
-            drawPosition = ofPoint(getPosition().x - getWidth(),
-                                   getPosition().y + getHeight());
-            break;
         case BOTTOM_LEFT:
-            drawPosition = ofPoint(getPosition().x, getPosition().y);
-            break;
         case BOTTOM_RIGHT:
-            drawPosition = ofPoint(getPosition().x - getWidth(),
-                                   getPosition().y);
+            drawPosition = ofPoint(getPosition().x, getPosition().y);
             break;
         default:
             throw OutOfRange(anchor, __LINE__, "anchor");
