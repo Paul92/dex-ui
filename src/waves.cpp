@@ -14,14 +14,11 @@
 
 Waves::Waves() {
     // Initialize parameters
-    freezet = 0;
 
     setSize(300, 300);
 
-    zh = getWidth()/6;
-    old_zh = getWidth()/6;
-    new_zh = getWidth()/6;
     noise_scale = 150.0;
+    cornerSize = 10.0;
 
     rotateX = 115;
     rotateY = 0;
@@ -44,14 +41,18 @@ Waves::Waves() {
     // Create point mesh, map texture coordinates
     initMesh(4);
 
-    camDist = 2400;
-    view = ofPoint(0,0);
-    easyCam = ofEasyCam();
+    camDist = 1500;
     easyCam.setTarget(ofVec3f(0,0,0));
     easyCam.setDistance(camDist);
-    easyCam.disableMouseInput();
+//    easyCam.disableMouseInput();
 
     addEvent(AnimationEvent("main"));
+}
+
+void Waves::setSize(int width, int height) {
+    Widget::setSize(width, height);
+    boxSide = min(width, height);
+    boxHeight = boxSide / 5;
 }
 
 void Waves::initTexture(int descalar) {
@@ -77,12 +78,6 @@ void Waves::initMesh(int spacing) {
     }
 }
 
-void Waves::setPosition(ofPoint position) {
-    Waves::setPosition(position);
-    view.x = -WIDTH/2 + position.x;
-    view.y = -HEIGHT/2 + position.y;
-}
-
 int Waves::getUpdatePosition() {
     // Only return 0 once, otherwise actions that occur at 0 will be repeated
     if (((int) getTime() % (int) (texw) == 0) && ((int) (getTime()/update_sweep_rate) % (int) (texw) == 0))
@@ -92,9 +87,8 @@ int Waves::getUpdatePosition() {
 
 void Waves::update() {
     updateTime();
-//    //  rotateX = getTime()/3;
-//    rotateZ += 1/rotateZ_rate;
-//
+    rotateZ += 1 / rotateZ_rate;
+
 //    easyCam.setDistance(camDist);
 //
 //    //  zh = ofNoise(getTime()/100)*200;
@@ -125,37 +119,62 @@ void Waves::update() {
     //  cout << getUpdatePosition() << endl;
 }
 
+void drawAxes() {
+    ofPushStyle();
+    ofSetColor(255, 0, 0);
+    ofDrawLine(0, 0, 0, 100, 0, 0);
+    ofPopStyle();
+
+    ofPushStyle();
+    ofSetColor(0, 255, 0);
+    ofDrawLine(0, 0, 0, 0, 100, 0);
+    ofPopStyle();
+
+    ofPushStyle();
+    ofSetColor(0, 0, 255);
+    ofDrawLine(0, 0, 0, 0, 0, 100);
+    ofPopStyle();
+}
+
+
+
 void Waves::draw() {
     update();
 
-    easyCam.begin(ofRectangle(view.x, view.y, WIDTH, HEIGHT));
+    ofMatrix4x4 matrix = ofGetCurrentMatrix(OF_MATRIX_MODELVIEW);
+    ofPoint viewportOrigin(getWidth() / 2, 0);
+    viewportOrigin = viewportOrigin * matrix;
+
+
+    easyCam.begin(ofRectangle(viewportOrigin, WIDTH, HEIGHT));
 
     ofPushMatrix();
     {
-        ofTranslate(getPosition());
         ofRotateX(rotateX);
         ofRotateY(rotateY);
         ofRotateZ(rotateZ);
 
+    drawAxes();
         ofPushStyle();
         {
             ofNoFill();
             ofSetColor(82, 104, 92, 25);
-            ofDrawBox(0, 0, 0, getWidth(), getHeight(), zh * 2);
-            ofDrawBox(0, 0, -zh + 5, getWidth(), getHeight(), 10);
-            ofDrawBox(0, 0,  zh - 5, getWidth(), getHeight(), 10);
+            ofDrawBox(0 , 0 , 0     , boxSide , boxSide , boxHeight*2);
+            ofDrawBox(0 , 0 , -boxHeight+5 , boxSide , boxSide , 10);
+            ofDrawBox(0 , 0 , boxHeight-5  , boxSide , boxSide , 10);
         }
         ofPopStyle();
 
         // Corners
-        ofSetColor(82, 104, 92, 255);
-
-        for (int x = -1; x <= 1; x += 2)
-            for (int y = -1; y <= 1; y += 2)
-                for (int z = -1; z <= 1; z += 2)
-                    drawCorner(ofPoint(x * (getWidth() / 2 + 10),
-                                       y * (getHeight() / 2 + 10),
-                                       z * (zh + 10)));
+        ofPushStyle();
+        {
+            ofSetColor(82, 104, 92, 255);
+            for (int x = -1; x <= 1; x += 2) 
+                for (int y = -1; y <= 1; y += 2)
+                    for (int z = -1; z <= 1; z += 2)
+                        drawCorner(ofPoint(x*(boxSide/2+5), y*(boxSide/2+5), z*(boxHeight+5)));
+        }
+        ofPopStyle();
 
         // Mesh
 //        waveShader.begin();
@@ -180,21 +199,17 @@ void Waves::draw() {
     ofPopMatrix();
 
     easyCam.end();
-
-    //  ofSetColor(255, 255, 255);
-    //  ofRect(ofGetMouseX(), ofGetMouseY(), 10, 10);
 }
 
-int Waves::sign(float x) {
+int sign(float x) {
     if (x > 0) return 1;
     if (x < 0) return -1;
     return 0;
 }
 
 void Waves::drawCorner(ofPoint p) {
-    float pl = 10.0;
-    ofLine(p.x, p.y, p.z, p.x, p.y, p.z-sign(p.z)*pl);
-    ofLine(p.x, p.y, p.z, p.x, p.y-sign(p.y)*pl, p.z);
-    ofLine(p.x, p.y, p.z, p.x-sign(p.x)*pl, p.y, p.z);
+    ofDrawLine(p.x, p.y, p.z, p.x, p.y, p.z - sign(p.z) * cornerSize);
+    ofDrawLine(p.x, p.y, p.z, p.x, p.y - sign(p.y) * cornerSize, p.z);
+    ofDrawLine(p.x, p.y, p.z, p.x - sign(p.x) * cornerSize, p.y, p.z);
 }
 

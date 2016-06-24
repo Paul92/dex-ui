@@ -11,20 +11,19 @@ class Waves : public Animated, public Widget {
         void initPlane(int descalar, int z_displacement);
         void initMesh(int spacing);
 
-        void setPosition(ofPoint p);
-
         void update();
         void draw();
 
         int getUpdatePosition();
 
-        int sign(float x);
         void drawCorner(ofPoint p);
 
-        float freezet;
-        float old_zh, new_zh;
-        float w, h;
-        float zh;
+        void setSize(int width, int height);
+
+        float boxSide;
+        float boxHeight;
+        float cornerSize;
+
         float noise_scale;
 
         float rotateX;
@@ -32,7 +31,7 @@ class Waves : public Animated, public Widget {
         float rotateZ;
 
         float rotateZ_rate;
-        float update_sweep_rate;
+        int update_sweep_rate;
 
         ofMesh mesh;
         ofPlanePrimitive plane;
@@ -44,5 +43,4 @@ class Waves : public Animated, public Widget {
         ofEasyCam easyCam;
 
         float camDist;
-        ofPoint view;
 };
