@@ -1,149 +1,183 @@
-/*
-
-   waves.h
-
-   Perlin waves visualization
-   Uses a 2d texture generated from perlin noise to displace a mesh/plane
-   Most of the work happens in the wave.frag/wave.vert shaders
-   For placement, relies on using easyCam and changing the viewport location
-   to deal with perspective issues
-
-*/
 #include "waves.h"
 #include "graphics-utils.h"
 
 Waves::Waves() {
-    // Initialize parameters
 
     setSize(300, 300);
 
-    noise_scale = 150.0;
-    cornerSize = 10.0;
+    baseTime = 0;
+    oldScale = 0;
+    newScale = 0;
 
+    // Set the default orientation of the box.
     rotateX = 115;
     rotateY = 0;
     rotateZ = 0;
 
-    rotateZ_rate = 4.0;
-    update_sweep_rate = 4.0;
+    // Set the animation speeds.
+    rotateZRate = 4;
+    updateSweepRate = 4;
 
+    cornerSize = 12.0;
 
-    // Load shaders
+    // Load the shader.
     waveShader.load("shadersGL3/wave");
-    //  outlineShader.load("shadersGL3/outline");
 
-    // Create displacement texture
-    initTexture(5);
-
-    // Create plane, if want solid waves
-    initPlane(15, 20);
-
-    // Create point mesh, map texture coordinates
-    initMesh(4);
-
-    camDist = 1500;
-    easyCam.setTarget(ofVec3f(0,0,0));
-    easyCam.setDistance(camDist);
-//    easyCam.disableMouseInput();
+    // Set camera parameters.
+    cameraDistance = 2500;
+    easyCam.setDistance(cameraDistance);
+    easyCam.disableMouseInput();
 
     addEvent(AnimationEvent("main"));
 }
 
 void Waves::setSize(int width, int height) {
     Widget::setSize(width, height);
-    boxSide = min(width, height);
-    boxHeight = boxSide / 5;
+    boxSide = min(width, height) * 2;
+    boxHeight = boxSide / 7;
+
+    initTexture(5);
+    initPlane(10, 20);
+    initMesh(10);
 }
 
+// Initialize displacement texture.
 void Waves::initTexture(int descalar) {
-    texw = getWidth()/descalar;
-    texh = getHeight()/descalar;
-    displacementTexture.allocate(texw, texh, OF_IMAGE_GRAYSCALE);
+    float textureWidth = boxSide / descalar;
+    float textureHeight = boxSide / descalar;
+    displacementTexture.allocate(textureWidth, textureHeight, OF_IMAGE_GRAYSCALE);
+    displacementTexture.setColor(ofColor::black);
+    displacementTexture.update();
 }
 
-void Waves::initPlane(int descalar, int z_displacement) {
-    plane.set(getWidth(), getHeight(), getWidth()/descalar, getHeight()/descalar, OF_PRIMITIVE_TRIANGLES);
-    plane.mapTexCoordsFromTexture(displacementTexture.getTextureReference());
-    plane.setPosition(0,0,z_displacement);
+
+// Initialize plane, for solid waves.
+// Needs to have the displacementTexture allocated.
+void Waves::initPlane(int descalar, int zDisplacement) {
+    float numberOfPointsPerSide = boxSide / descalar;
+    plane.set(boxSide, boxSide,
+              numberOfPointsPerSide, numberOfPointsPerSide,
+              OF_PRIMITIVE_TRIANGLES);
+    plane.mapTexCoordsFromTexture(displacementTexture.getTexture());
+    plane.setPosition(0, 0, zDisplacement);
 }
 
+// Initialize point mesh.
+// Needs to have the displacementTexture allocated.
 void Waves::initMesh(int spacing) {
-    mesh = ofMesh();
+    mesh.clear();
     mesh.setMode(OF_PRIMITIVE_POINTS);
-    for (float y = 0; y < getHeight(); y += spacing) {
-        for (float x = 0; x < getWidth(); x += spacing) {
-            mesh.addVertex(ofPoint(x-getWidth()/2,y-getHeight()/2,0));
-            mesh.addTexCoord(ofVec2f(x/getWidth()*texw,y/getHeight()*texh));
+    for (float y = 0; y < boxSide; y += spacing) {
+        for (float x = 0; x < boxSide; x += spacing) {
+            // Add point to mesh.
+            float pointX = ofMap(x, 0, boxSide, -boxSide / 2, boxSide / 2);
+            float pointY = ofMap(y, 0, boxSide, -boxSide / 2, boxSide / 2);
+            mesh.addVertex(ofPoint(pointX, pointY, 0));
+
+            // Add texture to point.
+            float texX = x / boxSide * displacementTexture.getWidth();
+            float texY = y / boxSide * displacementTexture.getHeight();
+            mesh.addTexCoord(ofVec2f(texX, texY));
         }
     }
 }
 
 int Waves::getUpdatePosition() {
     // Only return 0 once, otherwise actions that occur at 0 will be repeated
-    if (((int) getTime() % (int) (texw) == 0) && ((int) (getTime()/update_sweep_rate) % (int) (texw) == 0))
+    if (((int)getTime() % (int)(displacementTexture.getWidth()) == 0)
+     && ((int)getTime() / updateSweepRate % (int)displacementTexture.getWidth() == 0))
         return 0;
-    return ((int) (getTime()/update_sweep_rate) % (int)(texw)) + 1;
+    return ((int)getTime() / updateSweepRate) % (int)displacementTexture.getWidth() + 1;
+}
+
+void Waves::updateDisplacementTexture() {
+    float coordinateScaling = 1 / 30.0;
+    float timeScaling = 1 / 150.0;
+
+    unsigned char *pixels = displacementTexture.getPixels().getData();
+
+    for (int y = 0; y < displacementTexture.getHeight(); y++) {
+        for (int x = 0; x < getUpdatePosition(); x++) {
+            int index = y * displacementTexture.getWidth() + x;
+            float n = ofNoise(x * coordinateScaling + baseTime * timeScaling,
+                              y * coordinateScaling + baseTime * timeScaling);
+            pixels[index] = 255 * n;
+        }
+    }
+
+    displacementTexture.update();
 }
 
 void Waves::update() {
     updateTime();
-    rotateZ += 1 / rotateZ_rate;
 
-//    easyCam.setDistance(camDist);
-//
-//    //  zh = ofNoise(getTime()/100)*200;
-//    //  noise_scale = ofNoise(getTime()/100+100)*getWidth()/2 + getWidth()/2;
-//
-//    if (getUpdatePosition() == 0) {
-//        freezet = getTime();
-//        old_zh = new_zh;
-//        new_zh = zh * ((ofRandom(1)+0.3)*5);
-//        //    cout << "old_zh " << old_zh << endl;
-//        //    cout << "new_zh " << new_zh << endl;
-//    }
-//
-//    // Update displacement texture
-//    float coord_scale = 1/30.0;
-//    float time_scale = 1/150.0;
-//    unsigned char *pixels = displacementTexture.getPixels();
-//    for (int y = 0; y < texh; y++) {
-//        for (int x = 0; x < getUpdatePosition(); x++) {
-//            int i = y * texw + x;
-//            float n = ofNoise(x*coord_scale + freezet*time_scale,
-//                    y*coord_scale + freezet*time_scale);
-//            pixels[i] = 255*n;
-//        }
-//    }
-//    displacementTexture.update();
+    if (rotateZRate)
+        rotateZ += 1 / rotateZRate;
 
-    //  cout << getUpdatePosition() << endl;
+    easyCam.setDistance(cameraDistance);
+
+    if (getUpdatePosition() == 0) {
+        baseTime = getTime();
+        oldScale = newScale;
+        newScale = boxHeight * (ofRandom(1) + 0.3) * 5;
+    }
+
+    updateDisplacementTexture();
 }
 
-void drawAxes() {
+void Waves::drawBoxes() {
     ofPushStyle();
-    ofSetColor(255, 0, 0);
-    ofDrawLine(0, 0, 0, 100, 0, 0);
-    ofPopStyle();
-
-    ofPushStyle();
-    ofSetColor(0, 255, 0);
-    ofDrawLine(0, 0, 0, 0, 100, 0);
-    ofPopStyle();
-
-    ofPushStyle();
-    ofSetColor(0, 0, 255);
-    ofDrawLine(0, 0, 0, 0, 0, 100);
+    {
+        ofNoFill();
+        ofSetColor(82, 104, 92, 25);
+        ofDrawBox(0, 0, 0, boxSide, boxSide, boxHeight * 2);
+        ofDrawBox(0, 0, -boxHeight + 5, boxSide, boxSide, 9);
+        ofDrawBox(0, 0,  boxHeight - 5, boxSide, boxSide, 10);
+    }
     ofPopStyle();
 }
 
+void Waves::drawCorners() {
+    ofPushStyle();
+    {
+        ofSetColor(82, 104, 92, 255);
+        for (int x = -1; x <= 1; x += 2) 
+            for (int y = -1; y <= 1; y += 2)
+                for (int z = -1; z <= 1; z += 2)
+                    drawCorner(ofPoint(x * (boxSide / 2 + 7),
+                                       y * (boxSide / 2 + 7),
+                                       z * (boxHeight + 7)));
+    }
+    ofPopStyle();
+}
 
+void Waves::drawWaves() {
+    waveShader.begin();
+    waveShader.setUniform2f("scale", oldScale, newScale);
+    waveShader.setUniform1f("updatePosition", getUpdatePosition());
+
+    waveShader.setUniform1f("alpha_adjust", 1);
+    displacementTexture.bind();
+    mesh.draw();
+
+    waveShader.setUniform1f("alpha_adjust", 0.1);
+    plane.drawWireframe();
+    displacementTexture.unbind();
+
+    waveShader.end();
+}
 
 void Waves::draw() {
     update();
 
+    // Get the global position of the viewport origin by transforming it
+    // through the matrix stack.
     ofMatrix4x4 matrix = ofGetCurrentMatrix(OF_MATRIX_MODELVIEW);
+    // The viewport origin relative to the widget's coordinate system.
     ofPoint viewportOrigin(getWidth() / 2, 0);
-    viewportOrigin = viewportOrigin * matrix;
+    // The viewport origin transformed through the global modelview matrix
+    // (the widget's position is considered too).
+    viewportOrigin = (viewportOrigin + getPosition()) * matrix;
 
 
     easyCam.begin(ofRectangle(viewportOrigin, WIDTH, HEIGHT));
@@ -154,47 +188,9 @@ void Waves::draw() {
         ofRotateY(rotateY);
         ofRotateZ(rotateZ);
 
-    drawAxes();
-        ofPushStyle();
-        {
-            ofNoFill();
-            ofSetColor(82, 104, 92, 25);
-            ofDrawBox(0 , 0 , 0     , boxSide , boxSide , boxHeight*2);
-            ofDrawBox(0 , 0 , -boxHeight+5 , boxSide , boxSide , 10);
-            ofDrawBox(0 , 0 , boxHeight-5  , boxSide , boxSide , 10);
-        }
-        ofPopStyle();
-
-        // Corners
-        ofPushStyle();
-        {
-            ofSetColor(82, 104, 92, 255);
-            for (int x = -1; x <= 1; x += 2) 
-                for (int y = -1; y <= 1; y += 2)
-                    for (int z = -1; z <= 1; z += 2)
-                        drawCorner(ofPoint(x*(boxSide/2+5), y*(boxSide/2+5), z*(boxHeight+5)));
-        }
-        ofPopStyle();
-
-        // Mesh
-//        waveShader.begin();
-//        waveShader.setUniform2f("scale", old_zh, new_zh);
-//        waveShader.setUniform1f("updatePosition", getUpdatePosition());
-//
-//        ofNoFill();
-//        ofSetColor(255, 255, 255);
-//
-//
-//        waveShader.setUniform1f("alpha_adjust", 0.1);
-//        //    plane.draw();
-//        plane.drawWireframe();
-//
-//        waveShader.setUniform1f("alpha_adjust", 1);
-//        mesh.draw();
-//
-//        waveShader.end();
-
-        //    ofDisableDepthTest();
+        drawBoxes();
+        drawCorners();
+        drawWaves();
     }
     ofPopMatrix();
 
@@ -213,3 +209,6 @@ void Waves::drawCorner(ofPoint p) {
     ofDrawLine(p.x, p.y, p.z, p.x - sign(p.x) * cornerSize, p.y, p.z);
 }
 
+void Waves::setCameraDistance(int distance) {
+    cameraDistance = distance;
+}
