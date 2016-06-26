@@ -28,6 +28,7 @@ class TextRectangle : public Widget, public Animated {
         void draw();
 
         void setColor(ofColor color);
+        void setColor(ofColor color, AnchorPosition position);
 
         void setFont(int size, std::string font = MAIN_FONT);
 };

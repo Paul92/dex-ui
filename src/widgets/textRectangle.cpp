@@ -47,6 +47,23 @@ void TextRectangle::setColor(ofColor color) {
     lowerRightText.setColor(color);
 }
 
+void TextRectangle::setColor(ofColor color, AnchorPosition position) {
+    switch (position) {
+        case AnchorPosition::BOTTOM_LEFT:
+            lowerLeftText.setColor(color);
+            break;
+        case AnchorPosition::TOP_LEFT:
+            upperLeftText.setColor(color);
+            break;
+        case AnchorPosition::TOP_RIGHT:
+            upperRightText.setColor(color);
+            break;
+        case AnchorPosition::BOTTOM_RIGHT:
+            lowerRightText.setColor(color);
+            break;
+    }
+}
+
 void TextRectangle::setFont(int size, std::string font) {
     upperLeftText.setFont(size, font);
     lowerLeftText.setFont(size, font);
