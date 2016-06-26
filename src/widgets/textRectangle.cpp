@@ -20,6 +20,13 @@ void TextRectangle::setCoordinates(ofRectangle rectangle) {
     setPosition(rectangle.getPosition());
 }
 
+void TextRectangle::addDelay(int delay) {
+    upperLeftText.addDelay(delay);
+    lowerLeftText.addDelay(delay);
+    upperRightText.addDelay(delay);
+    lowerRightText.addDelay(delay);
+}
+
 void TextRectangle::draw() {
     ofPushMatrix();
 

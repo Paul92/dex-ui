@@ -21,6 +21,8 @@ class TextRectangle : public Widget, public Animated {
                       std::string upperRightText, std::string lowerRightText,
                       int textSize = 5, string font = MAIN_FONT);
 
+        void addDelay(int delay);
+
         void setCoordinates(ofRectangle rectangle);
 
         void draw();
