@@ -22,6 +22,7 @@ class TextRectangle : public Widget {
                       int textSize = 5, string font = MAIN_FONT);
 
         void addDelay(int delay);
+        void addDelay(int delay, AnchorPosition position);
 
         void setCoordinates(ofRectangle rectangle);
 

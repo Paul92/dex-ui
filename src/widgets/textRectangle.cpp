@@ -64,6 +64,23 @@ void TextRectangle::setColor(ofColor color, AnchorPosition position) {
     }
 }
 
+void TextRectangle::addDelay(int delay, AnchorPosition position) {
+    switch (position) {
+        case AnchorPosition::BOTTOM_LEFT:
+            lowerLeftText.addDelay(delay);
+            break;
+        case AnchorPosition::TOP_LEFT:
+            upperLeftText.addDelay(delay);
+            break;
+        case AnchorPosition::TOP_RIGHT:
+            upperRightText.addDelay(delay);
+            break;
+        case AnchorPosition::BOTTOM_RIGHT:
+            lowerRightText.addDelay(delay);
+            break;
+    }
+}
+
 void TextRectangle::setFont(int size, std::string font) {
     upperLeftText.setFont(size, font);
     lowerLeftText.setFont(size, font);
