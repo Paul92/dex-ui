@@ -23,6 +23,7 @@ class BoxVisualization : public Animated, public Widget {
     public:
         BoxVisualization(int width);
         void draw();
+        void update();
 
         Waves waves;
 

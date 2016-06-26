@@ -10,58 +10,39 @@ BoxVisualization::BoxVisualization(int width) :
     tline1(width, 40),
     tline2(width, 40) {
 
-        setSize(width, 11 * GRID_SIZE);
-        textRectangle.addDelay(55);
-        textRectangle.setCoordinates(ofRectangle(5, 5, getWidth() - 5, getHeight() - 18));
+    setSize(width, 11 * GRID_SIZE);
 
-//
-  waves = Waves();
-//  waves.setPos(ofPoint(285,375));
-//  
-//  
-//  int textDelay = -55;
-//  // Top Left
-//  texts.push_back(newText("SYSTEM SUMMARY", 5,
-//                          5, 7,
-//                          10, delay+textDelay,
-//                          COLOR_135,
-//                          false));
-//  // Top Right
-//  texts.push_back(newText("WAVES VISUALIZATION", 5,
-//                          w-5, 7,
-//                          10, delay+textDelay-5,
-//                          COLOR_55,
-//                          true));
-//  // Bottom Right
-//  texts.push_back(newText("HIGH LOAD", 5,
-//                          w-5, h-18,
-//                          10, delay+textDelay-10,
-//                          COLOR_55,
-//                          true));
-//  texts.push_back(newText("ALL ACTIVITY", 5,
-//                          w-4, h-11,
-//                          10, delay+textDelay-10,
-//                          COLOR_55,
-//                          true));
-//  // Bottom Left
-//  texts.push_back(newText("ANALYSIS OF", 5,
-//                          5,h-18,
-//                          10, delay+textDelay-15,
-//                          COLOR_55,
-//                          false));
-//  texts.push_back(newText("SYSTEM UTILIZATION", 5,
-//                          5,h-11,
-//                          10, delay+textDelay-15,
-//                          COLOR_55,
-//                          false));
-//  
-//  // Animation settings
+    textRectangle.setCoordinates(ofRectangle(5, 5, getWidth() - 5, getHeight() - 18));
+
+    // Set the color to all texts except the upper left one to COLOR_55.
+    textRectangle.setColor(COLOR_55);
+    textRectangle.setColor(COLOR_135, AnchorPosition::TOP_LEFT);
+
+    textRectangle.addDelay(55, AnchorPosition::TOP_LEFT);
+    textRectangle.addDelay(50, AnchorPosition::TOP_RIGHT);
+    textRectangle.addDelay(45, AnchorPosition::BOTTOM_LEFT);
+    textRectangle.addDelay(40, AnchorPosition::BOTTOM_RIGHT);
+
+    waves.setSize(width, getHeight());
+    waves.setCameraDistance(20000);
+
     addEvent(AnimationEvent("intro", 300));
     addEvent(AnimationEvent("main"));
 }
 
-void BoxVisualization::draw() {
+void BoxVisualization::update() {
     updateTime();
+
+    if (currentEvent() == "intro")
+          waves.setCameraDistance(easeOut(getTime(), 20000, 2400, 50));
+}
+
+void BoxVisualization::draw() {
+    if (currentEvent() == "delay")
+        return;
+
+    update();
+
     ofPushMatrix();
     {
         ofTranslate(getPosition());
@@ -70,11 +51,7 @@ void BoxVisualization::draw() {
         tline1.draw();
         tline2.draw();
 
-//        if (currentEvent() == "intro" && getTime() > 0)
-//              waves.camDist = easeOut(getTime(), 20000, 2400, 50);
-
-//        if (getTime() > 0)
-              waves.draw();
+        waves.draw();
 
         textRectangle.draw();
     }
