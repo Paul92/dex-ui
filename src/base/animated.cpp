@@ -10,10 +10,10 @@ void Animated::updateTime() {
     if (currentEventIndex >= events.size())
         throw NotFound();
 
+    currentTime += 1;
+
     if (events[currentEventIndex].isInfinite())
         return;
-
-    currentTime += 1;
 
     if (currentTime > events[currentEventIndex].getDuration()) {
         currentTime = 0;
