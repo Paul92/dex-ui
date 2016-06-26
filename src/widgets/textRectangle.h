@@ -9,7 +9,7 @@
  *
  * @brief Class to draw 4 texts placed in the corners of a rectangle.
  */
-class TextRectangle : public Widget, public Animated {
+class TextRectangle : public Widget {
     private:
         AnimatedText upperLeftText;
         AnimatedText lowerLeftText;
