@@ -1,10 +1,8 @@
-/*
- 
- noiseVisualization.h
- 
- Noise visualization on bottom left panel
- Dots are generated from 2D Perlin noise
- 
+/**
+ * @class NoiseVisualization
+ *
+ * @brief Noise visualization on bottom left panel
+ *        Dots are generated from 2D Perlin noise
  */
 
 #pragma once
@@ -13,41 +11,27 @@
 #include "waves.h"
 #include "animated.h"
 
-
 #include "animatedText.h"
 #include "animatedTickLine.h"
+#include "noiseWindow.h"
+#include "noiseWindow.h"
 
-class NoiseVisualization : public Animated {
-  
-public:
-  NoiseVisualization();
-  void update();
-  void draw();
-  void drawNoise();
-  
-  void setPos(float x_, float y_);
-  
-  float x;
-  float y;
-  float w;
-  float h;
-  
-  float t;
-  float update_x;
-  float noise_off;
-  float noise_w;
-  float noise_h;
-  float texw;
-  float texh;
-  ofShader noiseShader;
-  ofImage displacementTexture;
+class NoiseVisualization : public Widget, public Animated {
 
-  void updateDependencyEvents();
-  void updateDependencyDelays(int delay_);
-private:
-//  AnimatedTickLine tline1;
-//  AnimatedTickLine tline2;
-//  vector<AnimatedText> texts;
-//  
-  void initTexture(int descalar);
+    public:
+        NoiseVisualization(int width);
+        void update();
+        void draw();
+        void drawNoise();
+
+        float noise_off;
+
+
+    private:
+        AnimatedTickLine upperTickLine;
+        AnimatedTickLine lowerTickLine;
+        NoiseWindow noise;
+        vector<AnimatedText> texts;
+
+        void initTexture(int descalar);
 };
