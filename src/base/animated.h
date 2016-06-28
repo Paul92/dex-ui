@@ -43,6 +43,13 @@ class Animated {
         /// Reset the current animation.
         void reset();
 
+        /**
+         * @brief Returns the total delay of the current animation.
+         *
+         * @throws InfiniteEvent if a delay event is improperly configured.
+         */
+        float getDelay();
+
     public:
 
         /// Adds delay to an animation by inserting a delay event at the

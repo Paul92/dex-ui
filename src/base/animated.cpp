@@ -48,3 +48,14 @@ void Animated::reset() {
     currentEventIndex = 0;
 }
 
+// Works by adding the durations of the events named "delay".
+float Animated::getDelay() {
+
+    float totalDelay = 0;
+
+    for (size_t index = 0; index < events.size(); index++)
+        if (events[index].getLabel() == "delay")
+            totalDelay += events[index].getDuration();
+
+    return totalDelay;
+}
