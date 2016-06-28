@@ -1,12 +1,12 @@
 /*
- 
- graph.h
- 
- Simple spline graph visualization
- Used for displaying core's performance on left panel
- Has implementation of b-spline from aframes
- 
- */
+
+   graph.h
+
+   Simple spline graph visualization
+   Used for displaying core's performance on left panel
+   Has implementation of b-spline from aframes
+
+*/
 
 #pragma once
 #include "ofMain.h"
@@ -17,40 +17,63 @@
 #include "animatedText.h"
 #include "animatedTickLine.h"
 
-class Graph : public Animated {
-  
-public:
-  Graph();
-  void update();
-  void draw();
-  
-  void setPos(float x_, float y_);
-  void setName(string name_);
-  
-  float x;
-  float y;
-  float w;
-  float h;
-  
-  float t;
-  
-  bool show_rect1;
-  bool show_rect2;
-  bool show_rect3;
-  
-  std::vector<ofPoint> aframe_points;
-  float new_sample;
-  int anchor_count;
-  float anchor_xoff;
-  float anchor_yoff;
-  
-  float introLinesDur;
-  
-  void updateDependencyEvents();
-  void updateDependencyDelays(int delay_);
-private:
-  vector<AnimatedText> texts;
-  
-  void bezier_vertex_from_aframe(ofPoint aframe_p1, ofPoint aframe_p2, ofPoint aframe_p3);
-  ofPoint intermediate_point(ofPoint p1, ofPoint p2, float distance);
+#include "base/animated.h"
+#include "base/widget.h"
+
+class Graph : public Animated, public Widget {
+
+    public:
+        Graph(int width);
+        void update();
+        void draw();
+
+        void setName(std::string name);
+
+        /// Flags that toggle the visibility of the rectangles.
+        bool showRectangle1;
+        bool showRectangle2;
+        bool showRectangle3;
+
+        /// The number of frames between 2 graph updates.
+        int graphRefreshTime;
+
+        /// The width of the graph line.
+        float graphWidth;
+
+        std::vector<ofPoint> graphPoints;
+
+        /// The Y value of the new sample to be inserted in the graph.
+        float nextSampleY;
+
+        /// The distance between 2 consecutive datapoints of the graph.
+        float pointDistance;
+
+        /// The Y amplitude of the graph.
+        float graphAmplitude;
+
+        /// The duration of the line animation at the start.
+        float introLinesDuration;
+    private:
+        /// Draw top/bottom lines.
+        void drawLines();
+
+        /// Draw the rectangles on the right.
+        void drawRectangles();
+
+        /// Draw the spline.
+        void drawSpline();
+
+        /// Draw the texts.
+        void drawTexts();
+
+        float rectangleWidth;
+
+        void initializeTexts();
+        std::vector<AnimatedText> texts;
+
+        void bezierVertexFromDatapoints(ofPoint point1,
+                                        ofPoint point2,
+                                        ofPoint point3);
+
+        ofPoint intermediatePoint(ofPoint p1, ofPoint p2, float distance);
 };
