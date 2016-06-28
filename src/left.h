@@ -25,12 +25,11 @@ class Left : public Widget, public Animated {
         Header header;
         TimeDisplay timeDisplay;
         BoxVisualization boxVis;
-//        Graph g1;
-//        Graph g2;
-//        Graph g3;
-//        Graph g4;
-//        NoiseVisualization noiseVis;
-//        Header footer;
-//
-//        float footer_len;
+        Graph core1;
+        Graph core2;
+        Graph core3;
+        Graph core4;
+        NoiseVisualization noiseVisualization;
+        Header footer;
+
 };

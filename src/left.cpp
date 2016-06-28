@@ -6,7 +6,13 @@
 Left::Left(ofPoint position, int width) :
     header(width, TextRectangle("SYSTEM", "ALT PANEL", "", "")),
     timeDisplay(width),
-    boxVis(width)
+    boxVis(width),
+    core1(width),
+    core2(width),
+    core3(width),
+    core4(width),
+    noiseVisualization(width),
+    footer(6 * GRID_SIZE, TextRectangle("", "", "", "DEX UI"))
 {
     Widget::setPosition(position);
 
@@ -14,31 +20,24 @@ Left::Left(ofPoint position, int width) :
     timeDisplay.setPosition(ofPoint(0, 2 * GRID_SIZE));
 
     boxVis.setPosition(ofPoint(0, 9*GRID_SIZE));
-//
-//    int graph_start=21;
-//    g1.setPos(0, (graph_start)*GRID_SIZE);
-//    g2.setPos(0, (graph_start+3)*GRID_SIZE);
-//    g3.setPos(0, (graph_start+6)*GRID_SIZE);
-//    g4.setPos(0, (graph_start+9)*GRID_SIZE);
-//    g1.setName("CORE L1");
-//    g2.setName("CORE L2");
-//    g3.setName("CORE L3");
-//    g4.setName("CORE L4");
-//
-//    noiseVis.setPos(0, 33*GRID_SIZE);
-//
-//    footer_len = 6*GRID_SIZE;
-//    footer.setPos(w-footer_len, 41*GRID_SIZE);
-//    footer.setSize(footer_len);
-//    footer.setTextSize(7);
+
+    int graph_start=21;
+    core1.setPosition(ofPoint(0, (graph_start)*GRID_SIZE));
+    core2.setPosition(ofPoint(0, (graph_start+3)*GRID_SIZE));
+    core3.setPosition(ofPoint(0, (graph_start+6)*GRID_SIZE));
+    core4.setPosition(ofPoint(0, (graph_start+9)*GRID_SIZE));
+    core1.setName("CORE L1");
+    core2.setName("CORE L2");
+    core3.setName("CORE L3");
+    core4.setName("CORE L4");
+
+    noiseVisualization.setPosition(ofPoint(0, 33*GRID_SIZE));
+
+    footer.setPosition(ofPoint(width - footer.getWidth(), 41 * GRID_SIZE));
+    footer.setTextSize(7);
+
 //    footer.br_text = "DEX UI";
 //    footer.line.duration = 50;
-//
-//    // Animation settings
-//    events.clear();
-//    newEvent(0, 300, 0, 1); // intro
-//    newEvent(0, -1, 1, 1); // main
-//    currentEvent = events[0];
 
     addEvent(AnimationEvent("delay", 0));
     addEvent(AnimationEvent("intro", 300));
@@ -72,12 +71,12 @@ void Left::draw() {
         header.draw();
         timeDisplay.draw();
         boxVis.draw();
-//        g1.draw();
-//        g2.draw();
-//        g3.draw();
-//        g4.draw();
-//        noiseVis.draw();
-//        footer.draw();
+        core1.draw();
+        core2.draw();
+        core3.draw();
+        core4.draw();
+        noiseVisualization.draw();
+        footer.draw();
     }
     ofPopMatrix();
 }
