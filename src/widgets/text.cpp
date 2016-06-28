@@ -3,10 +3,20 @@
 
 void Text::setFont(int size, std::string font) {
     ofFont.load(font, size);
+
+    if (anchor == TOP_RIGHT || anchor == BOTTOM_RIGHT)
+        ofFont.setDirection(ofTtfSettings::RightToLeft);
+
+    setSize(ofFont.stringWidth(text), ofFont.stringHeight(text));
 }
 
 void Text::setText(std::string text) {
-    this->text = text;
+
+    if (anchor == TOP_RIGHT || anchor == BOTTOM_RIGHT)
+        this->text = reverseLines(text);
+    else
+        this->text = text;
+
     setSize(ofFont.stringWidth(text), ofFont.stringHeight(text));
 }
 
@@ -15,12 +25,6 @@ Text::Text(std::string text, AnchorPosition anchor,
     this->anchor = anchor;
 
     setFont(size, font);
-
-    if (anchor == TOP_RIGHT || anchor == BOTTOM_RIGHT) {
-        ofFont.setDirection(ofTtfSettings::RightToLeft);
-        text = reverseLines(text);
-    }
-
     setText(text);
 }
 
