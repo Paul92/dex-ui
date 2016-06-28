@@ -34,9 +34,7 @@ Left::Left(ofPoint position, int width) :
     noiseVisualization.setPosition(ofPoint(0, 33*GRID_SIZE));
 
     footer.setPosition(ofPoint(width - footer.getWidth(), 41 * GRID_SIZE));
-    footer.setTextSize(7);
 
-//    footer.br_text = "DEX UI";
 //    footer.line.duration = 50;
 
     addEvent(AnimationEvent("delay", 0));

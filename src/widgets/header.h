@@ -31,7 +31,6 @@ class Header : public Widget, public Animated {
         void draw();
 
         void setSize(float width);
-        void setTextSize(int size);
         void setColor(ofColor color);
 
     private:
@@ -39,3 +38,4 @@ class Header : public Widget, public Animated {
         TextRectangle textRectangle;
         AnimatedTickLine line;
 };
+
