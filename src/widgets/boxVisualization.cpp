@@ -12,6 +12,8 @@ BoxVisualization::BoxVisualization(int width) :
 
     setSize(width, 11 * GRID_SIZE);
 
+    tline2.setPosition(ofPoint(0, getHeight()));
+
     textRectangle.setCoordinates(ofRectangle(5, 5, getWidth() - 5, getHeight() - 18));
 
     // Set the color to all texts except the upper left one to COLOR_55.
