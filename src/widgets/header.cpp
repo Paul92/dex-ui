@@ -5,9 +5,9 @@ Header::Header(int width, const TextRectangle &texts) :
             textRectangle(texts),
             line(width, 50, 0, COLOR_LINE) {
 
-        Widget::setSize(width, GRID_SIZE);
-        textRectangle.setCoordinates(ofRectangle(5, 6, width - 8, GRID_SIZE));
-        line.setPosition(ofPoint(0, GRID_SIZE));
+    Widget::setSize(width, GRID_SIZE);
+    textRectangle.setCoordinates(ofRectangle(5, 6, width - 8, GRID_SIZE));
+    line.setPosition(ofPoint(0, GRID_SIZE));
 }
 
 void Header::draw() {
