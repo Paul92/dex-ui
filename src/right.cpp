@@ -50,7 +50,7 @@ Right::Right() {
 }
 
 void Right::draw() {
-//  updateTime();
+//  updateAnimation();
 //  ofPushMatrix();
 //  {
 //    ofTranslate(x, y);
