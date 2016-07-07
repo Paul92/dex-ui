@@ -3,7 +3,6 @@
 #include <vector>
 
 #include "base/animationEvent.h"
-#include "exceptions/notFound.h"
 
 /**
  * @class Animated

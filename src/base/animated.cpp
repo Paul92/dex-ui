@@ -1,14 +1,18 @@
 #include "animated.h"
 
 #include <iostream>
+#include <stdexcept>
 
 Animated::Animated() {
     reset();
 }
 
 void Animated::updateTime() {
-    if (currentEventIndex >= events.size())
-        throw NotFound();
+    if (currentEventIndex >= events.size()) {
+        std::string message = "Current event not found in function ";
+        message += __func__;
+        throw std::range_error(message);
+    }
 
     currentTime += 1;
 
