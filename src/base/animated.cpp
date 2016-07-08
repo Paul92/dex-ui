@@ -36,14 +36,14 @@ void Animated::addEvent(AnimationEvent event) {
     reset();
 }
 
-void Animated::addEvent(AnimationEvent event, int index) {
-    if (index >= 0) {
+void Animated::addEvent(AnimationEvent event, unsigned int index) {
+    if (index >= events.size()) {
+        std::string errorMessage = "Exceed the vector size in function ";
+        errorMessage += __func__;
+        throw std::out_of_range(errorMessage);
+    } else {
         events.insert(events.begin() + index, event);
         reset();
-    } else {
-        std::string errorMessage = "Not a correct value for index in function ";
-        errorMessage += __func__;
-        throw std::invalid_argument(errorMessage);
     }
 }
 

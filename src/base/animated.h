@@ -34,12 +34,13 @@ class Animated {
         void addEvent(AnimationEvent event);
 
         /**
-         * @brief Add event after the event at position index.
-         * @throws invalid_argument if value of index is negative.
-         * @throws bad_alloc by events.insert() if the allocation does not
-         * succed.
+         * @brief Add event at given position.
+         * @param The position after which the element is inserted.
+         * @throws out_of_range If value of index is negative.
+         * @throws bad_alloc From events.insert() if the allocation does not
+         *                   succeed.
          */
-        void addEvent(AnimationEvent event, int index);
+        void addEvent(AnimationEvent event, unsigned int index);
 
         /// Return the label of the current event.
         std::string currentEvent();
