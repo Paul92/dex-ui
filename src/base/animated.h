@@ -33,7 +33,12 @@ class Animated {
         /// Add event at the end of the current list of events.
         void addEvent(AnimationEvent event);
 
-        /// Add event after the event at position index.
+        /**
+         * @brief Add event after the event at position index.
+         * @throws invalid_argument if value of index is negative.
+         * @throws bad_alloc by events.insert() if the allocation does not
+         * succed.
+         */
         void addEvent(AnimationEvent event, int index);
 
         /// Return the label of the current event.

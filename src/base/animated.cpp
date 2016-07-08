@@ -39,8 +39,14 @@ void Animated::addEvent(AnimationEvent event) {
 }
 
 void Animated::addEvent(AnimationEvent event, int index) {
-    events.insert(events.begin() + index, event);
-    reset();
+    if (index >= 0) {
+        events.insert(events.begin() + index, event);
+        reset();
+    } else {
+        std::string errorMessage = "Not a correct value for index in function ";
+        errorMessage += __func__;
+        throw std::invalid_argument(errorMessage);
+    }
 }
 
 void Animated::addDelay(int delay) {
