@@ -37,8 +37,8 @@ class Animated {
          * @brief Add event at given position.
          * @param The position after which the element is inserted.
          * @throws out_of_range If value of index is negative.
-         * @throws bad_alloc From events.insert() if the allocation does not
-         *                   succeed.
+         * @throws bad_alloc From std::vector::insert() if the allocation does
+         *                   not succeed.
          */
         void addEvent(AnimationEvent event, unsigned int index);
 
