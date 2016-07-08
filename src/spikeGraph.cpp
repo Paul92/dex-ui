@@ -53,7 +53,7 @@ void SpikeGraph::update() {
 //    // Remove spikes
 //    removeOldSpikes();
 //  }
-//  updateAnimation();
+//  updateTime();
 }
 
 void SpikeGraph::draw() {

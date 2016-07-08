@@ -55,7 +55,7 @@ void Key::setDelay(int delay_) {
 }
 
 void Key::draw() {
-//  updateAnimation();
+//  updateTime();
 //  
 //  ofPushMatrix();
 //  {
@@ -142,7 +142,7 @@ void Spacebar::setPos(float x_, float y_) {
 }
 
 void Spacebar::draw() {
-//  updateAnimation();
+//  updateTime();
 //  
 //  ofNoFill();
 //  if (currentEvent.id == 0) {
@@ -211,7 +211,7 @@ void KeyRow::setKeys(string s) {
 }
 
 void KeyRow::draw() {
-//  updateAnimation();
+//  updateTime();
 //  ofPushMatrix();
 //  {
 //    ofTranslate(x,y);
@@ -343,7 +343,7 @@ void Keyboard::toggleDebug() {
 }
 
 void Keyboard::draw() {
-//  updateAnimation();
+//  updateTime();
 //  ofPushMatrix();
 //  {
 //    ofTranslate(x, y);

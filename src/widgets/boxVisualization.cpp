@@ -33,7 +33,7 @@ BoxVisualization::BoxVisualization(int width) :
 }
 
 void BoxVisualization::update() {
-    updateAnimation();
+    updateTime();
 
     if (currentEvent() == "intro")
           waves.setCameraDistance(easeOut(getTime(), 20000, 2400, 50));

@@ -13,7 +13,7 @@ AnimatedTickLine::AnimatedTickLine(int width, int introDuration,
 }
 
 void AnimatedTickLine::draw() {
-    updateAnimation();
+    updateTime();
 
     ofPushMatrix();
     {

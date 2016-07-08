@@ -1,7 +1,7 @@
 #include "ofApp.h"
 #include "graphics-utils.h"
 
-ofApp::ofApp() : left(ofPoint(165, 20), 240), largeLeft(ofPoint(465, 20), 500), smallLeft(ofPoint(1000, 20), 100) {}
+ofApp::ofApp() : left(ofPoint(165, 165), 240), largeLeft(ofPoint(465, 165), 500), smallLeft(ofPoint(1000, 165), 100) {}
 
 void ofApp::setup() {
     ofSetWindowTitle("DEX UI");

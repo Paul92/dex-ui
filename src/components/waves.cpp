@@ -109,7 +109,7 @@ void Waves::updateDisplacementTexture() {
 }
 
 void Waves::update() {
-    updateAnimation();
+    updateTime();
 
     if (rotateZRate)
         rotateZ += 1 / rotateZRate;

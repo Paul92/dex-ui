@@ -25,7 +25,7 @@ class Animated {
          * @brief Update the timer and the current event, if necessary.
          * @throws NotFound If the next event is not found.
          */
-        void updateAnimation();
+        void updateTime();
 
         /// Get the progress of the current event.
         int getTime();

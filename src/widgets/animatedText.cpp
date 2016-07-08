@@ -27,7 +27,7 @@ void AnimatedText::setFlickerParameters(float rate, float duration) {
 }
 
 void AnimatedText::draw() {
-    updateAnimation();
+    updateTime();
 
     ofPushMatrix();
     {
