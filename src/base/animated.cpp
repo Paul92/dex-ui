@@ -1,6 +1,4 @@
 #include "animated.h"
-
-#include <iostream>
 #include <stdexcept>
 
 Animated::Animated() {
