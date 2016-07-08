@@ -2,7 +2,7 @@
 
 #include <vector>
 
-#include "base/animationEvent.h"
+#include "animationEvent.h"
 
 /**
  * @class Animated
