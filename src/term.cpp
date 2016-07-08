@@ -32,7 +32,7 @@ Term::Term() {
 }
 
 void Term::update() {
-//  updateTime();
+//  updateAnimation();
 //  //  if (currentEvent.id == 0 && getTime() == 200)
 //  //  system("nohup urxvt >/dev/null 2>&1 &");
 //  t += 1;

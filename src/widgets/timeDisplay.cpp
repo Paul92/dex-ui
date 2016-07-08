@@ -136,7 +136,7 @@ void TimeDisplay::update() {
         updateMainTime();
         updateUptime();
     }
-    updateTime();
+    updateAnimation();
 }
 
 void TimeDisplay::updateClockTime() {

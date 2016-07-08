@@ -96,7 +96,7 @@ void RadarContainer::setPos(float x_, float y_) {
 }
 
 void RadarContainer::draw() {
-//  updateTime();
+//  updateAnimation();
 //  ofPushMatrix();
 //  {
 //    ofTranslate(x, y);

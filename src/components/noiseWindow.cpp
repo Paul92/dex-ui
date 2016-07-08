@@ -20,7 +20,7 @@ NoiseWindow::NoiseWindow(int width, int height, int updateRate) {
 }
 
 void NoiseWindow::update() {
-    updateTime();
+    updateAnimation();
 
     if ((int)getTime() % updateRate == 0) {
 

@@ -5,7 +5,7 @@ Animated::Animated() {
     reset();
 }
 
-void Animated::updateTime() {
+void Animated::updateAnimation() {
     if (currentEventIndex >= events.size()) {
         std::string message = "Current event not found in function ";
         message += __func__;

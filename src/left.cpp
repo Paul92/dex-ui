@@ -44,7 +44,7 @@ Left::Left(ofPoint position, int width) :
 }
 
 void Left::draw() {
-    updateTime();
+    updateAnimation();
     ofPushMatrix();
     {
         ofTranslate(getPosition().x, getPosition().y);
