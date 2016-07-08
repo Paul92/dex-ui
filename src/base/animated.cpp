@@ -38,7 +38,7 @@ void Animated::addEvent(AnimationEvent event) {
 
 void Animated::addEvent(AnimationEvent event, unsigned int index) {
     if (index >= events.size()) {
-        std::string errorMessage = "Exceed the vector size in function ";
+        std::string errorMessage = "Index exceeds the vector size in function ";
         errorMessage += __func__;
         throw std::out_of_range(errorMessage);
     } else {
