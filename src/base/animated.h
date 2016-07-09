@@ -35,7 +35,7 @@ class Animated {
 
         /**
          * @brief Add event at given position.
-         * @param The position after which the element is inserted.
+         * @param The position before which the element is inserted.
          * @throws out_of_range If value of index is negative.
          * @throws bad_alloc From std::vector::insert() if the allocation does
          *                   not succeed.
