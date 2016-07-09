@@ -33,7 +33,6 @@ int Animated::getTime() {
 
 void Animated::addEvent(AnimationEvent event) {
     events.push_back(event);
-    reset();
 }
 
 void Animated::addEvent(AnimationEvent event, unsigned int index) {
