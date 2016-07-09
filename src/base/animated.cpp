@@ -43,7 +43,6 @@ void Animated::addEvent(AnimationEvent event, unsigned int index) {
         throw std::out_of_range(errorMessage);
     } else {
         events.insert(events.begin() + index, event);
-        reset();
     }
 }
 
