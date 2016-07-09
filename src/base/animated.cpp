@@ -59,9 +59,9 @@ float Animated::getDelay() {
 
     float totalDelay = 0;
 
-    for (size_t index = 0; index < events.size(); index++)
-        if (events[index].getLabel() == "delay")
-            totalDelay += events[index].getDuration();
+    for (const auto &event:events)
+        if (event.getLabel() == "delay")
+            totalDelay += event.getDuration();
 
     return totalDelay;
 }
