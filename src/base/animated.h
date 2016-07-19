@@ -4,6 +4,12 @@
 
 #include "animationEvent.h"
 
+#include<ctime>
+#include<ratio>
+#include<chrono>
+
+using namespace std::chrono;
+
 /**
  * @class Animated
  *
@@ -67,6 +73,9 @@ class Animated {
 
         /// The value of the internal time counter, in frames.
         int currentTime;
+
+        ///  The initial time of an event.
+        steady_clock::time_point initialTime;
 
         /// The list of events.
         std::vector<AnimationEvent> events;
