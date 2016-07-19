@@ -1,12 +1,14 @@
 #include "animated.h"
 #include <stdexcept>
-
+#include <iostream>
+using namespace std;
 Animated::Animated() {
+    initialTime = steady_clock::now();
     reset();
 }
 
 void Animated::updateAnimation() {
-    if (currentEventIndex >= events.size()) {
+    /*if (currentEventIndex >= events.size()) {
         std::string message = "Current event not found in function ";
         message += __func__;
         throw std::range_error(message);
@@ -20,11 +22,22 @@ void Animated::updateAnimation() {
     if (currentTime > events[currentEventIndex].getDuration()) {
         currentTime = 0;
         currentEventIndex++;
-    }
+    }*/
 }
 
 std::string Animated::currentEvent() {
-    return events[currentEventIndex].getLabel();
+    if (events[currentEventIndex].isInfinite())
+        return "";
+
+    steady_clock::time_point currentDuration = steady_clock::now();
+
+    duration<int, std::milli>diff = duration_cast<duration<int, std::milli>>(currentDuration - initialTime);
+    cout << "DINO ";
+    if (diff.count() > events[currentEventIndex].getDuration()){
+        currentEventIndex++;
+        cout <<  "DINO ";
+        return events[currentEventIndex].getLabel();
+    }
 }
 
 int Animated::getTime() {
