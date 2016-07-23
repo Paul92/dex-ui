@@ -1,9 +1,9 @@
 #include "animated.h"
 #include <stdexcept>
 #include <iostream>
-using namespace std;
+
 Animated::Animated() {
-    initialTime = steady_clock::now();
+    initialTime = std::chrono::steady_clock::now();
     reset();
 }
 
@@ -26,22 +26,29 @@ void Animated::updateAnimation() {
 }
 
 std::string Animated::currentEvent() {
+    if (currentEventIndex >= events.size()) {
+        std::string errMessage = "Current event not found ";
+        throw std::range_error(errMessage);
+    }
+
     if (events[currentEventIndex].isInfinite())
-        return "";
+        return events[currentEventIndex].getLabel();
 
-    steady_clock::time_point currentDuration = steady_clock::now();
-
-    duration<int, std::milli>diff = duration_cast<duration<int, std::milli>>(currentDuration - initialTime);
-    cout << "DINO ";
-    if (diff.count() > events[currentEventIndex].getDuration()){
+    std::chrono::steady_clock::time_point currentDuration = std::chrono::steady_clock::now();
+    std::chrono::duration<int, std::milli>diff = std::chrono::duration_cast<std::chrono::duration<int, std::milli>>(currentDuration - initialTime);
+    
+    if (diff.count() <= events[currentEventIndex].getDuration()) {
+        return events[currentEventIndex].getLabel();
+    } else if (diff.count() > events[currentEventIndex].getDuration()) {
         currentEventIndex++;
-        cout <<  "DINO ";
         return events[currentEventIndex].getLabel();
     }
 }
 
 int Animated::getTime() {
-    return currentTime;
+    currentTime = std::chrono::steady_clock::now();
+    std::chrono::duration<int, std::milli>difference = std::chrono::duration_cast<std::chrono::duration<int, std::milli>>(currentTime - initialTime);
+    return difference.count();
 }
 
 void Animated::addEvent(AnimationEvent event) {
@@ -63,12 +70,12 @@ void Animated::addDelay(int delay) {
 }
 
 void Animated::reset() {
-    currentTime = 0;
+    //currentTime = 0;
     currentEventIndex = 0;
 }
 
 // Works by adding the durations of the events named "delay".
-float Animated::getDelay() {
+float Animated::getDelay() const {
 
     float totalDelay = 0;
 

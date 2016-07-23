@@ -4,11 +4,10 @@
 
 #include "animationEvent.h"
 
-#include<ctime>
-#include<ratio>
-#include<chrono>
+#include <ctime>
+#include <ratio>
+#include <chrono>
 
-using namespace std::chrono;
 
 /**
  * @class Animated
@@ -59,7 +58,7 @@ class Animated {
          *
          * @throws InfiniteEvent if a delay event is improperly configured.
          */
-        float getDelay();
+        float getDelay() const;
 
     public:
 
@@ -72,10 +71,10 @@ class Animated {
         size_t currentEventIndex;
 
         /// The value of the internal time counter, in frames.
-        int currentTime;
+        std::chrono::steady_clock::time_point currentTime;
 
         ///  The initial time of an event.
-        steady_clock::time_point initialTime;
+        std::chrono::steady_clock::time_point initialTime;
 
         /// The list of events.
         std::vector<AnimationEvent> events;
