@@ -1,13 +1,11 @@
 #pragma once
 
 #include <vector>
-
-#include "animationEvent.h"
-
 #include <ctime>
 #include <ratio>
 #include <chrono>
 
+#include "animationEvent.h"
 
 /**
  * @class Animated
@@ -58,7 +56,7 @@ class Animated {
          *
          * @throws InfiniteEvent if a delay event is improperly configured.
          */
-        float getDelay() const;
+        double getDelay() const;
 
     public:
 
@@ -70,7 +68,7 @@ class Animated {
         /// The index of the current event.
         size_t currentEventIndex;
 
-        /// The value of the internal time counter, in frames.
+        /// The current time.
         std::chrono::steady_clock::time_point currentTime;
 
         ///  The initial time of an event.
