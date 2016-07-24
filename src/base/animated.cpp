@@ -18,7 +18,7 @@ std::string Animated::currentEvent() {
     if (events[currentEventIndex].isInfinite())
         return events[currentEventIndex].getLabel();
 
-    std::chrono::steady_clock::time_point currentDuration = std::chrono::steady_clock::now();
+    auto currentDuration = std::chrono::steady_clock::now();
     auto timePassed = std::chrono::duration_cast<std::chrono::duration<int, std::milli>>(currentDuration - initialTime);
     
     if (timePassed.count() <= events[currentEventIndex].getDuration()) {
@@ -54,7 +54,6 @@ void Animated::addDelay(int delay) {
 }
 
 void Animated::reset() {
-    //currentTime = 0;
     currentEventIndex = 0;
 }
 
