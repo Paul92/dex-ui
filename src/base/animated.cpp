@@ -19,6 +19,8 @@ std::string Animated::currentEvent() {
         return events[currentEventIndex].getLabel();
 
     auto currentDuration = std::chrono::steady_clock::now();
+
+    // Time passed since the current event started
     auto timePassed = std::chrono::duration_cast<std::chrono::duration<int, std::milli>>(currentDuration - initialTime);
     
     if (timePassed.count() <= events[currentEventIndex].getDuration()) {
