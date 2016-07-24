@@ -7,27 +7,11 @@ Animated::Animated() {
     reset();
 }
 
-void Animated::updateAnimation() {
-    /*if (currentEventIndex >= events.size()) {
-        std::string message = "Current event not found in function ";
-        message += __func__;
-        throw std::range_error(message);
-    }
-
-    currentTime += 1;
-
-    if (events[currentEventIndex].isInfinite())
-        return;
-
-    if (currentTime > events[currentEventIndex].getDuration()) {
-        currentTime = 0;
-        currentEventIndex++;
-    }*/
-}
+void Animated::updateAnimation() { }
 
 std::string Animated::currentEvent() {
     if (currentEventIndex >= events.size()) {
-        std::string errMessage = "Current event not found ";
+        std::string errMessage = "Index of current event out of range ";
         throw std::range_error(errMessage);
     }
 
@@ -35,11 +19,11 @@ std::string Animated::currentEvent() {
         return events[currentEventIndex].getLabel();
 
     std::chrono::steady_clock::time_point currentDuration = std::chrono::steady_clock::now();
-    std::chrono::duration<int, std::milli>diff = std::chrono::duration_cast<std::chrono::duration<int, std::milli>>(currentDuration - initialTime);
+    auto timePassed = std::chrono::duration_cast<std::chrono::duration<int, std::milli>>(currentDuration - initialTime);
     
-    if (diff.count() <= events[currentEventIndex].getDuration()) {
+    if (timePassed.count() <= events[currentEventIndex].getDuration()) {
         return events[currentEventIndex].getLabel();
-    } else if (diff.count() > events[currentEventIndex].getDuration()) {
+    } else if (timePassed.count() > events[currentEventIndex].getDuration()) {
         currentEventIndex++;
         return events[currentEventIndex].getLabel();
     }
@@ -47,7 +31,7 @@ std::string Animated::currentEvent() {
 
 int Animated::getTime() {
     currentTime = std::chrono::steady_clock::now();
-    std::chrono::duration<int, std::milli>difference = std::chrono::duration_cast<std::chrono::duration<int, std::milli>>(currentTime - initialTime);
+    auto difference = std::chrono::duration_cast<std::chrono::duration<int, std::milli>>(currentTime - initialTime);
     return difference.count();
 }
 
@@ -75,11 +59,11 @@ void Animated::reset() {
 }
 
 // Works by adding the durations of the events named "delay".
-float Animated::getDelay() const {
+double Animated::getDelay() const {
 
-    float totalDelay = 0;
+    double totalDelay = 0;
 
-    for (const auto &event:events)
+    for (const auto &event : events)
         if (event.getLabel() == "delay")
             totalDelay += event.getDuration();
 

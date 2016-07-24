@@ -2,18 +2,6 @@
 #include "exceptions/outOfRange.h"
 #include "exceptions/infiniteEvent.h"
 
-/*void AnimationEvent::setInfinite() {
-    std::chrono::duration<int, std::milli> infiniteDuration(0);
-    durationEvent = infiniteDuration;
-}*/
-
-/*void AnimationEvent::setDuration(int duration) {
-    if (duration < 0)
-        throw new OutOfRange(duration, __LINE__, "duration");
-
-    this->duration = duration;
-}*/
-
 AnimationEvent::AnimationEvent(std::string label) {
     this->label = label;
     infinite = true;
