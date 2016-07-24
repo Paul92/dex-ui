@@ -2,8 +2,7 @@
 #include <stdexcept>
 #include <iostream>
 
-Animated::Animated() {
-    initialTime = std::chrono::steady_clock::now();
+Animated::Animated():initialTime(std::chrono::steady_clock::now()){
     reset();
 }
 
