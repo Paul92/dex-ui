@@ -11,8 +11,7 @@ void Animated::updateAnimation() { }
 
 std::string Animated::currentEvent() {
     if (currentEventIndex >= events.size()) {
-        std::string errMessage = "Index of current event out of range ";
-        throw std::range_error(errMessage);
+        throw std::range_error("Index of current event out of range. ");
     }
 
     if (events[currentEventIndex].isInfinite())
