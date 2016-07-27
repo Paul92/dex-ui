@@ -17,13 +17,17 @@ std::string Animated::currentEvent() {
         return events[currentEventIndex].getLabel();
 
     auto currentDuration = std::chrono::steady_clock::now();
-
-    // Time passed since the current event started
     auto timePassed = std::chrono::duration_cast<std::chrono::duration<int, std::milli>>(currentDuration - initialTime);
-    
-    if (timePassed.count() <= events[currentEventIndex].getDuration()) {
+    int milliSeconds = timePassed.count();
+
+    for (unsigned int index = 0; index < currentEventIndex; index++) {
+        // Time passed since the current event started
+        milliSeconds -= events[index].getDuration();
+    }
+
+    if (milliSeconds <= events[currentEventIndex].getDuration()) {
         return events[currentEventIndex].getLabel();
-    } else if (timePassed.count() > events[currentEventIndex].getDuration()) {
+    } else if (milliSeconds > events[currentEventIndex].getDuration()) {
         currentEventIndex++;
         return events[currentEventIndex].getLabel();
     }
@@ -32,7 +36,12 @@ std::string Animated::currentEvent() {
 int Animated::getTime() {
     currentTime = std::chrono::steady_clock::now();
     auto difference = std::chrono::duration_cast<std::chrono::duration<int, std::milli>>(currentTime - initialTime);
-    return difference.count();
+    int millisecondsPassed = difference.count();
+
+    for (unsigned int index = 0; index < currentEventIndex; index++) {
+        millisecondsPassed -= events[index].getDuration();
+    }
+    return millisecondsPassed;
 }
 
 void Animated::addEvent(AnimationEvent event) {
