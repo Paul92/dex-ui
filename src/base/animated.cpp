@@ -34,8 +34,8 @@ std::string Animated::currentEvent() {
 }
 
 int Animated::getTime() {
-    currentTime = std::chrono::steady_clock::now();
-    auto difference = std::chrono::duration_cast<std::chrono::duration<int, std::milli>>(currentTime - initialTime);
+    auto currentDuration = std::chrono::steady_clock::now();
+    auto difference = std::chrono::duration_cast<std::chrono::duration<int, std::milli>>(currentDuration - initialTime);
     int millisecondsPassed = difference.count();
 
     for (unsigned int index = 0; index < currentEventIndex; index++) {

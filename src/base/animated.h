@@ -68,9 +68,6 @@ class Animated {
         /// The index of the current event.
         size_t currentEventIndex;
 
-        /// The current time.
-        std::chrono::steady_clock::time_point currentTime;
-
         ///  The initial time of an event.
         std::chrono::steady_clock::time_point initialTime;
 
