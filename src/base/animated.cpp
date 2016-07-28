@@ -20,7 +20,7 @@ std::string Animated::currentEvent() {
     auto timePassed = std::chrono::duration_cast<std::chrono::duration<int, std::milli>>(currentDuration - initialTime);
     int milliSeconds = timePassed.count();
 
-    for (unsigned int index = 0; index < currentEventIndex; index++) {
+    for (decltype(events)::size_type index = 0; index < currentEventIndex; index++) {
         // Time passed since the current event started
         milliSeconds -= events[index].getDuration();
     }
@@ -38,7 +38,7 @@ int Animated::getTime() {
     auto difference = std::chrono::duration_cast<std::chrono::duration<int, std::milli>>(currentDuration - initialTime);
     int millisecondsPassed = difference.count();
 
-    for (unsigned int index = 0; index < currentEventIndex; index++) {
+    for (decltype(events)::size_type index = 0; index < currentEventIndex; index++) {
         millisecondsPassed -= events[index].getDuration();
     }
     return millisecondsPassed;
