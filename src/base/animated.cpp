@@ -16,32 +16,32 @@ std::string Animated::currentEvent() {
     if (events[currentEventIndex].isInfinite())
         return events[currentEventIndex].getLabel();
 
-    auto currentDuration = std::chrono::steady_clock::now();
-    auto timePassed = std::chrono::duration_cast<std::chrono::duration<int, std::milli>>(currentDuration - initialTime);
-    int milliSeconds = timePassed.count();
+    auto currentTime = std::chrono::steady_clock::now();
+    auto timePassedSinceAnimationStarted = std::chrono::duration_cast<std::chrono::duration<int, std::milli>>(currentTime - initialTime);
+    int  timePassedSinceEventStarted = timePassedSinceAnimationStarted.count();
 
     for (decltype(events)::size_type index = 0; index < currentEventIndex; index++) {
         // Time passed since the current event started
-        milliSeconds -= events[index].getDuration();
+        timePassedSinceEventStarted -= events[index].getDuration();
     }
 
-    if (milliSeconds <= events[currentEventIndex].getDuration()) {
+    if (timePassedSinceEventStarted <= events[currentEventIndex].getDuration()) {
         return events[currentEventIndex].getLabel();
-    } else if (milliSeconds > events[currentEventIndex].getDuration()) {
+    } else if (timePassedSinceEventStarted > events[currentEventIndex].getDuration()) {
         currentEventIndex++;
         return events[currentEventIndex].getLabel();
     }
 }
 
 int Animated::getTime() {
-    auto currentDuration = std::chrono::steady_clock::now();
-    auto difference = std::chrono::duration_cast<std::chrono::duration<int, std::milli>>(currentDuration - initialTime);
-    int millisecondsPassed = difference.count();
+    auto currentTime = std::chrono::steady_clock::now();
+    auto timePassedSinceAnimationStarted = std::chrono::duration_cast<std::chrono::duration<int, std::milli>>(currentTime - initialTime);
+    int timePassedSinceEventStarted = timePassedSinceAnimationStarted.count();
 
     for (decltype(events)::size_type index = 0; index < currentEventIndex; index++) {
-        millisecondsPassed -= events[index].getDuration();
+        timePassedSinceEventStarted -= events[index].getDuration();
     }
-    return millisecondsPassed;
+    return timePassedSinceEventStarted;
 }
 
 void Animated::addEvent(AnimationEvent event) {
