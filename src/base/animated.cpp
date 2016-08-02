@@ -10,7 +10,8 @@ void Animated::updateAnimation() { }
 
 std::string Animated::currentEvent() {
     if (currentEventIndex >= events.size()) {
-        throw std::range_error("Current event out of range. Does your animation had an infinite event at the end?");
+        throw std::range_error("Current event out of range. "
+              "Does your animation had an infinite event at the end?");
     }
 
     if (events[currentEventIndex].isInfinite())
