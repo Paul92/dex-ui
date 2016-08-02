@@ -17,17 +17,17 @@ std::string Animated::currentEvent() {
         return events[currentEventIndex].getLabel();
 
     auto currentTime = std::chrono::steady_clock::now();
-    auto timePassedSinceAnimationStarted = std::chrono::duration_cast<std::chrono::duration<int, std::milli>>(currentTime - initialTime);
-    int  timePassedSinceEventStarted = timePassedSinceAnimationStarted.count();
+    auto timeFromBeginning = std::chrono::duration_cast<std::chrono::duration<int, std::milli>>(currentTime - initialTime);
+    int  timeFromEventBeginning = timeFromBeginning.count();
 
     for (decltype(events)::size_type index = 0; index < currentEventIndex; index++) {
         // Time passed since the current event started
-        timePassedSinceEventStarted -= events[index].getDuration();
+        timeFromEventBeginning -= events[index].getDuration();
     }
 
-    if (timePassedSinceEventStarted <= events[currentEventIndex].getDuration()) {
+    if (timeFromEventBeginning <= events[currentEventIndex].getDuration()) {
         return events[currentEventIndex].getLabel();
-    } else if (timePassedSinceEventStarted > events[currentEventIndex].getDuration()) {
+    } else if (timeFromEventBeginning > events[currentEventIndex].getDuration()) {
         currentEventIndex++;
         return events[currentEventIndex].getLabel();
     }
@@ -35,13 +35,13 @@ std::string Animated::currentEvent() {
 
 int Animated::getTime() {
     auto currentTime = std::chrono::steady_clock::now();
-    auto timePassedSinceAnimationStarted = std::chrono::duration_cast<std::chrono::duration<int, std::milli>>(currentTime - initialTime);
-    int timePassedSinceEventStarted = timePassedSinceAnimationStarted.count();
+    auto timeFromBegining = std::chrono::duration_cast<std::chrono::duration<int, std::milli>>(currentTime - initialTime);
+    int timeFromEventBegining = timeFromBegining.count();
 
     for (decltype(events)::size_type index = 0; index < currentEventIndex; index++) {
-        timePassedSinceEventStarted -= events[index].getDuration();
+        timeFromEventBegining -= events[index].getDuration();
     }
-    return timePassedSinceEventStarted;
+    return timeFromEventBegining;
 }
 
 void Animated::addEvent(AnimationEvent event) {
