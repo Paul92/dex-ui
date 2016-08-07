@@ -18,8 +18,10 @@ std::string Animated::currentEvent() {
         return events[currentEventIndex].getLabel();
 
     auto currentTime = std::chrono::steady_clock::now();
+
+    // Time passed since the animation started
     auto timeFromBeginning = std::chrono::duration_cast<std::chrono::duration<int, std::milli>>(currentTime - initialTime);
-    int  timeFromEventBeginning = timeFromBeginning.count();
+    int timeFromEventBeginning = timeFromBeginning.count();
 
     for (decltype(events)::size_type index = 0; index < currentEventIndex; index++) {
         // Time passed since the current event started
@@ -36,7 +38,11 @@ std::string Animated::currentEvent() {
 
 int Animated::getTime() {
     auto currentTime = std::chrono::steady_clock::now();
+
+    // Time passed since animation started
     auto timeFromBegining = std::chrono::duration_cast<std::chrono::duration<int, std::milli>>(currentTime - initialTime);
+
+    // Time past since event started
     int timeFromEventBegining = timeFromBegining.count();
 
     for (decltype(events)::size_type index = 0; index < currentEventIndex; index++) {
