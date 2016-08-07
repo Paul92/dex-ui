@@ -38,7 +38,7 @@ NoiseVisualization::NoiseVisualization(int width) :
 }
 
 void NoiseVisualization::update() {
-    updateTime();
+    updateAnimation();
 }
 
 void NoiseVisualization::draw() {

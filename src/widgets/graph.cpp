@@ -67,7 +67,7 @@ void Graph::initializeTexts() {
 }
 
 void Graph::update() {
-      updateTime();
+      updateAnimation();
 
       // Retest right side rectangles at each second
       if ((int)getTime() % FRAME_RATE == 0) {

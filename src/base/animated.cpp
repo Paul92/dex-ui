@@ -1,42 +1,68 @@
 #include "animated.h"
-
+#include <stdexcept>
 #include <iostream>
 
-Animated::Animated() {
+Animated::Animated():initialTime(std::chrono::steady_clock::now()){
     reset();
 }
 
-void Animated::updateTime() {
-    if (currentEventIndex >= events.size())
-        throw NotFound();
+void Animated::updateAnimation() { }
 
-    currentTime += 1;
+std::string Animated::currentEvent() {
+    if (currentEventIndex >= events.size()) {
+        throw std::range_error("Current event out of range. "
+              "Does your animation had an infinite event at the end?");
+    }
 
     if (events[currentEventIndex].isInfinite())
-        return;
+        return events[currentEventIndex].getLabel();
 
-    if (currentTime > events[currentEventIndex].getDuration()) {
-        currentTime = 0;
+    auto currentTime = std::chrono::steady_clock::now();
+
+    // Time passed since the animation started
+    auto timeFromBeginning = std::chrono::duration_cast<std::chrono::duration<int, std::milli>>(currentTime - initialTime);
+    int timeFromEventBeginning = timeFromBeginning.count();
+
+    for (decltype(events)::size_type index = 0; index < currentEventIndex; index++) {
+        // Time passed since the current event started
+        timeFromEventBeginning -= events[index].getDuration();
+    }
+
+    if (timeFromEventBeginning <= events[currentEventIndex].getDuration()) {
+        return events[currentEventIndex].getLabel();
+    } else if (timeFromEventBeginning > events[currentEventIndex].getDuration()) {
         currentEventIndex++;
+        return events[currentEventIndex].getLabel();
     }
 }
 
-std::string Animated::currentEvent() {
-    return events[currentEventIndex].getLabel();
-}
-
 int Animated::getTime() {
-    return currentTime;
+    auto currentTime = std::chrono::steady_clock::now();
+
+    // Time passed since animation started
+    auto timeFromBegining = std::chrono::duration_cast<std::chrono::duration<int, std::milli>>(currentTime - initialTime);
+
+    // Time past since event started
+    int timeFromEventBegining = timeFromBegining.count();
+
+    for (decltype(events)::size_type index = 0; index < currentEventIndex; index++) {
+        timeFromEventBegining -= events[index].getDuration();
+    }
+    return timeFromEventBegining;
 }
 
 void Animated::addEvent(AnimationEvent event) {
     events.push_back(event);
-    reset();
 }
 
-void Animated::addEvent(AnimationEvent event, int index) {
-    events.insert(events.begin() + index, event);
-    reset();
+void Animated::addEvent(AnimationEvent event, unsigned int index) {
+    if (index >= events.size()) {
+        std::string errorMessage = "Index exceeds the vector size in function ";
+        errorMessage += __func__;
+        throw std::out_of_range(errorMessage);
+    } else {
+        events.insert(events.begin() + index, event);
+    }
 }
 
 void Animated::addDelay(int delay) {
@@ -44,18 +70,17 @@ void Animated::addDelay(int delay) {
 }
 
 void Animated::reset() {
-    currentTime = 0;
     currentEventIndex = 0;
 }
 
 // Works by adding the durations of the events named "delay".
-float Animated::getDelay() {
+double Animated::getDelay() const {
 
-    float totalDelay = 0;
+    double totalDelay = 0;
 
-    for (size_t index = 0; index < events.size(); index++)
-        if (events[index].getLabel() == "delay")
-            totalDelay += events[index].getDuration();
+    for (const auto &event : events)
+        if (event.getLabel() == "delay")
+            totalDelay += event.getDuration();
 
     return totalDelay;
 }

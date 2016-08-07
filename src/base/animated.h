@@ -1,9 +1,11 @@
 #pragma once
 
 #include <vector>
+#include <ctime>
+#include <ratio>
+#include <chrono>
 
-#include "base/animationEvent.h"
-#include "exceptions/notFound.h"
+#include "animationEvent.h"
 
 /**
  * @class Animated
@@ -26,7 +28,7 @@ class Animated {
          * @brief Update the timer and the current event, if necessary.
          * @throws NotFound If the next event is not found.
          */
-        void updateTime();
+        void updateAnimation();
 
         /// Get the progress of the current event.
         int getTime();
@@ -34,8 +36,14 @@ class Animated {
         /// Add event at the end of the current list of events.
         void addEvent(AnimationEvent event);
 
-        /// Add event after the event at position index.
-        void addEvent(AnimationEvent event, int index);
+        /**
+         * @brief Add event at given position.
+         * @param The position before which the element is inserted.
+         * @throws out_of_range If value of index is negative.
+         * @throws bad_alloc From std::vector::insert() if the allocation does
+         *                   not succeed.
+         */
+        void addEvent(AnimationEvent event, unsigned int index);
 
         /// Return the label of the current event.
         std::string currentEvent();
@@ -48,7 +56,7 @@ class Animated {
          *
          * @throws InfiniteEvent if a delay event is improperly configured.
          */
-        float getDelay();
+        double getDelay() const;
 
     public:
 
@@ -60,8 +68,8 @@ class Animated {
         /// The index of the current event.
         size_t currentEventIndex;
 
-        /// The value of the internal time counter, in frames.
-        int currentTime;
+        ///  The initial time of an event.
+        std::chrono::steady_clock::time_point initialTime;
 
         /// The list of events.
         std::vector<AnimationEvent> events;
